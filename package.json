@@ -1,0 +1,8 @@
+{
+  "name": "idh-architecture",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "optimize:videos": "node scripts/optimize-videos.js"
+  }
+}

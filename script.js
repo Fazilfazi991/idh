@@ -18,4 +18,5 @@ const observer = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(element => observer.observe(element));
 
 const video = document.querySelector('.hero-video');
+video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
 video.addEventListener('error', () => video.classList.add('video-unavailable'), true);
