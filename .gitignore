@@ -2,3 +2,5 @@ architecture_placeholders_webp.zip
 services_section_images_webp.zip
 Task-110879099-2-1.mp4
 dist/
+.env
+.env.*

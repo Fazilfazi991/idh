@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { contact, nav, services, projects, process, insights, jobs, team } = require("../data/site-data");
+const { contact, nav, services, projects, process, insights, youtubeInsightFallbacks, jobs, team } = require("../data/site-data");
 
 const root = path.resolve(__dirname, "..");
 const cacheKey = "client-preview-20260623";
@@ -304,11 +304,41 @@ function processPage() {
 }
 
 function insightsPage() {
+  const manualInsights = insights.filter((post) => ["Article", "Blog"].includes(post.category));
+  const youtubeFallbackCards = youtubeInsightFallbacks.map((post) => `
+      <article class="insight-card video-insight-card reveal${post.videoId ? "" : " is-fallback"}" data-youtube-card${post.videoId ? ` data-video-id="${esc(post.videoId)}"` : ""}>
+        <button class="video-thumb" type="button" ${post.videoId ? `data-video-id="${esc(post.videoId)}"` : "disabled"} aria-label="${post.videoId ? `Play ${esc(post.title)}` : "Video unavailable"}">
+          <img src="${post.image}" alt="${esc(post.title)}" loading="lazy" />
+          <span class="play-overlay" aria-hidden="true"></span>
+        </button>
+        <div>
+          <span>${post.category}</span>
+          <small>${post.date}</small>
+          <h3>${post.title}</h3>
+          <p>${post.excerpt}</p>
+        </div>
+      </article>`).join("");
+
   return layout("insights", "insights", `
   <main>
     ${pageHero("Insights", "Announcements, news, articles and studio notes.", "A curated journal of IDH updates, design thinking and studio observations.", "architecture_placeholders_webp/10-insight-designing-wellbeing.webp")}
     <section class="content-section insight-categories">${["Announcement","News","Article","Blog"].map((cat) => `<a href="#${cat.toLowerCase()}">${cat}</a>`).join("")}</section>
-    <section class="content-section insight-grid">${insights.map((post) => `<article class="insight-card reveal" id="${post.category.toLowerCase()}"><img src="${post.image}" alt="${esc(post.title)}" loading="lazy" /><div><span>${post.category}</span><small>${post.date}</small><h3>${post.title}</h3><p>${post.excerpt}</p>${post.youtube ? `<div class="video-embed"><iframe src="${post.youtube}" title="${esc(post.title)} video preview" loading="lazy" allowfullscreen></iframe></div>` : ""}<a href="contact.html">Read more &rarr;</a></div></article>`).join("")}</section>
+    <section class="content-section insight-live-section" aria-labelledby="youtube-insights-title">
+      <div class="section-heading reveal">
+        <div>
+          <p class="eyebrow">YouTube Updates</p>
+          <h2 id="youtube-insights-title">Announcements &amp; News</h2>
+        </div>
+      </div>
+      <div class="insight-grid" data-youtube-insights aria-live="polite">${youtubeFallbackCards}</div>
+    </section>
+    <section class="content-section insight-grid">${manualInsights.map((post) => `<article class="insight-card reveal" id="${post.category.toLowerCase()}"><img src="${post.image}" alt="${esc(post.title)}" loading="lazy" /><div><span>${post.category}</span><small>${post.date}</small><h3>${post.title}</h3><p>${post.excerpt}</p><a href="contact.html">Read more &rarr;</a></div></article>`).join("")}</section>
+    <div class="video-modal" data-video-modal aria-hidden="true">
+      <button class="video-modal-close" type="button" data-video-modal-close aria-label="Close video">&times;</button>
+      <div class="video-modal-frame" role="dialog" aria-modal="true" aria-label="IDH Insights video">
+        <iframe title="IDH Insights video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+    </div>
   </main>`);
 }
 

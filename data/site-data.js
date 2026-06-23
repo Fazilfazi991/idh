@@ -156,6 +156,25 @@ const insights = [
   }
 ];
 
+const youtubeInsightFallbacks = [
+  {
+    title: "Studio Announcement: IDH Residential Design Update",
+    category: "Announcement",
+    date: "Studio Video",
+    image: "architecture_placeholders_webp/01-hero-modern-residence-exterior.webp",
+    excerpt: "A fallback studio announcement shown when the latest YouTube playlist videos are temporarily unavailable.",
+    videoId: ""
+  },
+  {
+    title: "Design News: Material Direction and Studio Notes",
+    category: "News",
+    date: "Design News",
+    image: "architecture_placeholders_webp/09-insight-natural-materials.webp",
+    excerpt: "A fallback news card for IDH Insights while the live YouTube feed is unavailable.",
+    videoId: ""
+  }
+];
+
 const jobs = [
   {
     title: "Junior Architect",
@@ -204,4 +223,4 @@ const team = [
   }
 ];
 
-module.exports = { contact, nav, services, projects, process, insights, jobs, testimonials, team };
+module.exports = { contact, nav, services, projects, process, insights, youtubeInsightFallbacks, jobs, testimonials, team };
