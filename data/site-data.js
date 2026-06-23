@@ -206,19 +206,19 @@ const team = [
   {
     name: "Founder",
     role: "Principal Designer",
-    image: "architecture_placeholders_webp/05-about-studio-vignette.webp",
+    image: "assets/team-founder.png",
     note: "Guides the studio’s creative direction with a focus on proportion, atmosphere, material restraint and spaces that feel deeply personal."
   },
   {
     name: "Co-founder",
     role: "Design Director",
-    image: "architecture_placeholders_webp/03-hero-curved-staircase.webp",
+    image: "assets/team-cofounder.png",
     note: "Leads design coordination and project clarity, bringing structure, detail and calm decision-making into every stage of the process."
   },
   {
     name: "Studio Team",
     role: "Architecture & Interiors",
-    image: "architecture_placeholders_webp/07-project-commercial-office.webp",
+    image: "assets/team-studio.png",
     note: "A collaborative studio of designers, architects and project coordinators shaping refined residential, commercial and hospitality spaces."
   }
 ];
