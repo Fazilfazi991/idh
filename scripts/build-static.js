@@ -16,7 +16,7 @@ const files = [
   "privacy-policy.html",
   "styles.css",
   "script.js",
-  path.join("public", "IDH-brochure-placeholder.pdf")
+  path.join("public", "IDH-studio-overview.pdf")
 ];
 const directories = [
   "assets",

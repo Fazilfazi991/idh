@@ -8,9 +8,7 @@ const contact = {
   whatsapp: "919917070111",
   socials: {
     Instagram: "https://www.instagram.com/idh_llc?igsh=YXNlZWNsNHdocXZj",
-    Facebook: "https://www.facebook.com/share/18zVrRfJFG/",
-    LinkedIn: "#",
-    YouTube: "#"
+    Facebook: "https://www.facebook.com/share/18zVrRfJFG/"
   }
 };
 
@@ -127,7 +125,7 @@ const insights = [
   {
     title: "Studio Announcement: IDH Expands Residential Design Services",
     category: "Announcement",
-    date: "08 Jan 2026",
+    date: "Studio Note",
     image: "architecture_placeholders_webp/01-hero-modern-residence-exterior.webp",
     excerpt: "A note from the studio on our expanded residential architecture and interiors offering across Kerala.",
     youtube: ""
@@ -135,7 +133,7 @@ const insights = [
   {
     title: "Material News: Warm Stone, Dark Timber and Quiet Metal",
     category: "News",
-    date: "22 Jan 2026",
+    date: "Design News",
     image: "architecture_placeholders_webp/09-insight-natural-materials.webp",
     excerpt: "A short look at the tactile palette shaping premium homes and hospitality environments this year.",
     youtube: ""
@@ -143,7 +141,7 @@ const insights = [
   {
     title: "The Beauty of Imperfection in Modern Design",
     category: "Article",
-    date: "12 Feb 2026",
+    date: "Editorial",
     image: "architecture_placeholders_webp/05-about-studio-vignette.webp",
     excerpt: "Why natural texture, hand-finished surfaces and gentle asymmetry can make a space feel deeply human.",
     youtube: ""
@@ -151,7 +149,7 @@ const insights = [
   {
     title: "Designing for Wellbeing: Light, Air and Calm",
     category: "Blog",
-    date: "04 Mar 2026",
+    date: "Journal Entry",
     image: "architecture_placeholders_webp/10-insight-designing-wellbeing.webp",
     excerpt: "A studio note on creating homes that support attention, rest, privacy and everyday ease.",
     youtube: ""
@@ -187,22 +185,22 @@ const testimonials = [
 
 const team = [
   {
-    name: "Founder Name",
-    role: "Founder & Principal Designer",
+    name: "Founder",
+    role: "Principal Designer",
     image: "architecture_placeholders_webp/05-about-studio-vignette.webp",
-    note: "Placeholder profile for the founder. Replace with final portrait and biography."
+    note: "Guides the studio’s creative direction with a focus on proportion, atmosphere, material restraint and spaces that feel deeply personal."
   },
   {
-    name: "Co-founder Name",
-    role: "Co-founder & Design Director",
+    name: "Co-founder",
+    role: "Design Director",
     image: "architecture_placeholders_webp/03-hero-curved-staircase.webp",
-    note: "Placeholder profile for the co-founder. Replace with final portrait and biography."
+    note: "Leads design coordination and project clarity, bringing structure, detail and calm decision-making into every stage of the process."
   },
   {
     name: "Studio Team",
     role: "Architecture & Interiors",
     image: "architecture_placeholders_webp/07-project-commercial-office.webp",
-    note: "Placeholder team image for designers, architects and project coordinators."
+    note: "A collaborative studio of designers, architects and project coordinators shaping refined residential, commercial and hospitality spaces."
   }
 ];
 

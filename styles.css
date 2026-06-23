@@ -156,3 +156,14 @@
 @media(max-width:1180px){.brand-logo{width:235px;height:68px}.site-header nav{gap:1vw}.site-header nav a{font-size:10px}.header-cta{display:none}.detail-grid,.expanded.project-grid,.team-grid,.values-grid,.job-grid{grid-template-columns:repeat(2,1fr)}.insight-card{grid-template-columns:1fr}.insight-card>img{height:320px}.timeline-grid{grid-template-columns:repeat(3,1fr);gap:30px;border-top:0}.timeline-grid article{border-top:1px solid var(--gold)}}
 @media(max-width:900px){.page-hero{min-height:62svh;padding:125px 24px 70px}.content-section{padding:80px 24px}.split-feature,.two-column,.messages,.form-section,.contact-panels{grid-template-columns:1fr}.split-feature img{height:430px}.form-copy{max-width:680px}.site-header nav a{font-size:15px}.timeline-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.page-hero h1{font-size:48px}.page-hero p:not(.eyebrow){font-size:14px}.content-section{padding:64px 20px}.content-section h2{font-size:39px}.detail-grid,.expanded.project-grid,.team-grid,.values-grid,.job-grid,.insight-grid,.timeline-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.process-list article{grid-template-columns:1fr;gap:10px;padding:28px}.team-card img,.detail-card img{height:280px}.insight-card>img{height:260px}.lux-form,.contact-panels article,.two-column article,.messages article,.job-card,.policy-copy{padding:26px}.hero-actions{max-width:none}.hero-actions .button{width:100%}.footer-socials{flex-wrap:wrap}.footer-socials a{height:31px}.services-showcase .services-mosaic .lux-card{min-height:auto}}
+
+/* Client-preview cleanup polish */
+.footer-socials{gap:10px;flex-wrap:wrap}
+.footer-socials a{width:auto;min-width:92px;height:34px;padding:0 13px;border-radius:999px;white-space:nowrap}
+.job-card{display:flex;flex-direction:column;gap:10px}
+.job-card a{align-self:flex-start;margin-top:auto;padding-top:12px}
+.map-frame{position:relative;border:1px solid var(--line);background:linear-gradient(145deg,#111414,#0b0d0e);overflow:hidden}
+.map-frame iframe{display:block;width:100%;height:440px;border:0;filter:grayscale(1) invert(.88) contrast(.9);background:#111}
+.map-caption{position:absolute;left:22px;bottom:22px;max-width:calc(100% - 44px);padding:12px 16px;background:rgba(12,15,16,.84);border:1px solid rgba(176,141,87,.45);color:var(--paper);font-size:12px;letter-spacing:.06em;backdrop-filter:blur(10px)}
+.map-section iframe{border:0}
+@media(max-width:640px){.footer-socials a{min-width:auto}.map-caption{position:static;max-width:none;border-left:0;border-right:0;border-bottom:0}}
