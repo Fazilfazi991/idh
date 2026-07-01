@@ -17,7 +17,6 @@ const nav = [
   ["About", "about.html"],
   ["Services", "services.html"],
   ["Projects", "projects.html"],
-  ["Process", "process.html"],
   ["Insights", "insights.html"],
   ["Careers", "careers.html"],
   ["Contact", "contact.html"]

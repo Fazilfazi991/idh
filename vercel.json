@@ -4,6 +4,18 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/process",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/process.html",
+      "destination": "/services",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/index.html",

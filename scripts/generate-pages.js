@@ -29,18 +29,13 @@ const meta = {
   },
   services: {
     file: "services.html",
-    title: "Services - IDH Architecture & Interiors",
-    description: "Architecture, interiors, residential, commercial, hospitality and design consultation services by IDH."
+    title: "Services | Integrated Design Habitat",
+    description: "Explore IDH's architecture, interior design, residential, commercial, hospitality and consultation services, along with our collaborative design process."
   },
   projects: {
     file: "projects.html",
     title: "Projects - Integrated Design Habitat",
     description: "Selected architecture, interior, commercial and hospitality projects by IDH."
-  },
-  process: {
-    file: "process.html",
-    title: "Process - Integrated Design Habitat",
-    description: "A considered design process from discovery and definition through design, development and delivery."
   },
   insights: {
     file: "insights.html",
@@ -98,6 +93,9 @@ function footer() {
           <img src="assets/idh-logo-transparent.png" alt="Integrated Design Habitat" />
         </a>
         <p>Architecture <i></i> Interiors <i></i> Spatial Design</p>
+        <div class="footer-map" aria-label="IDH studio location map">
+          <iframe title="IDH studio location map" loading="lazy" src="https://www.google.com/maps?q=Maas%20Tower%20Ground%20Floor%20Manjeri%20Malappuram%20Kerala&output=embed"></iframe>
+        </div>
       </div>
       <div class="footer-connect">
         <div class="footer-title"><span>Get in touch</span><i></i></div>
@@ -174,6 +172,13 @@ function pageHero(eyebrow, title, copy, image = "architecture_placeholders_webp/
 
 const brochureButton = `<a class="button button-outline" href="${brochure}" download>Download Brochure</a>`;
 
+const serviceAnchor = (title) =>
+  String(title)
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
 const serviceCards = (items = services) =>
   items.map((service) => `
     <article class="lux-card reveal">
@@ -181,7 +186,7 @@ const serviceCards = (items = services) =>
       <span>${service.number}</span>
       <h3>${service.title}</h3>
       <p>${service.excerpt}</p>
-      <a href="contact.html">Explore <i>&rarr;</i></a>
+      <a href="services.html#${serviceAnchor(service.title)}">Explore <i>&rarr;</i></a>
     </article>`).join("");
 
 const projectCards = (items = projects) =>
@@ -233,25 +238,13 @@ function home() {
         <div class="hero-actions"><a class="button button-gold" href="projects.html">View Projects</a><a class="button button-outline" href="contact.html">Start an Enquiry</a>${brochureButton}</div>
       </div>
       <div class="hero-meta"><span>Featured film</span><span>Integrated Design Habitat</span></div>
-      <a class="scroll-cue" href="#clients"><span>Scroll to explore</span><b>&darr;</b></a>
-    </section>
-    <section class="selected-clients" id="clients" aria-labelledby="clients-title">
-      <div class="clients-intro reveal"><p class="eyebrow">Spaces We Shape</p><i></i><h2 id="clients-title">Project experience across<br />thoughtful spatial typologies.</h2><p>We shape environments for private living, work,<br />hospitality and everyday rituals.</p></div>
-      <div class="client-grid reveal" aria-label="Project experience list">
-        ${["Private Residences|Bespoke Homes","Villas & Apartments|Residential Living","Commercial Interiors|Work & Brand Spaces","Hospitality Spaces|Guest Experiences","Renovation Projects|Refined Transformations","Spatial Design|Atmosphere & Flow"].map((item, index) => {
-          const [name, sub] = item.split("|");
-          return `<div class="client-mark${index % 3 === 1 ? " gold" : ""}"><strong>${name}</strong><small>${sub}</small></div>`;
-        }).join("")}
-      </div>
-      <div class="clients-link reveal"><i></i><a href="projects.html">View Project Work <span>&#10230;</span></a><i></i></div>
+      <a class="scroll-cue" href="#about"><span>Scroll to explore</span><b>&darr;</b></a>
     </section>
     <section class="about-feature" id="about">
       <div class="about-scene reveal"><img src="architecture_placeholders_webp/05-about-studio-vignette.webp" alt="Atmospheric crafted interior by Integrated Design Habitat" loading="lazy" /><div class="about-panel"><div class="about-label"><p class="eyebrow">About the studio</p><i></i></div><h2>Design-Led.<br />Detail-Driven.<br />Purposeful Spaces.</h2><p>We create timeless environments shaped by intention, craft and a quiet commitment to quality.</p><p>Every project begins with its people and ends with a space that feels entirely their own.</p><a href="about.html">Learn more about us <span>&rsaquo;</span></a></div></div>
       <div class="about-metrics reveal"><div class="metric-card"><i class="metric-icon">&#9671;</i><strong>12+</strong><b></b><span>Years of experience</span></div><div class="metric-card"><i class="metric-icon">&#9635;</i><strong>250+</strong><b></b><span>Projects completed</span></div><div class="metric-card"><i class="metric-icon">&#9678;</i><strong>25+</strong><b></b><span>Cities worldwide</span></div></div>
     </section>
     <section class="section services-showcase" id="services"><div class="services-heading reveal"><h2>Our Design<br /><em>Services</em></h2><p>Spaces designed.<br />Experiences elevated.</p></div><div class="services-mosaic">${serviceCards(services.slice(0, 6))}</div></section>
-    <section class="section projects-section" id="projects"><div class="section-heading reveal"><div><p class="eyebrow">Featured projects</p><h2>Spaces Crafted With Intention</h2></div><a class="text-link" href="projects.html">View all projects &rarr;</a></div><div class="project-grid">${projectCards(projects.slice(0, 4))}</div></section>
-    <section class="section process-showcase" id="process"><div class="process-heading reveal"><div><p class="eyebrow">Our process</p><h2>A Collaborative<br />&amp; Considered Approach</h2></div><i><b></b></i><p>Clarity, creativity and confidence at every stage&mdash;from first conversation to final detail.</p></div><div class="timeline-grid">${process.map(([num, title, text]) => `<article><span>${num}</span><h3>${title}</h3><p>${text}</p></article>`).join("")}</div></section>
     <section class="section journal" id="journal"><div class="section-heading reveal"><div><p class="eyebrow">Insights</p><h2>Journal</h2></div><a class="text-link" href="insights.html">View all articles &rarr;</a></div><div class="journal-grid">${insights.slice(0, 2).map((post) => `<article class="reveal"><img src="${post.image}" alt="${esc(post.title)}" loading="lazy" /><div><small>${post.date} &middot; ${post.category}</small><h3>${post.title}</h3><a href="insights.html">Read more &rarr;</a></div></article>`).join("")}</div></section>
     <section class="contact-cta" id="contact"><p class="eyebrow">Begin a conversation</p><h2>Let's Create Something Timeless</h2><p>Tell us about your project and the life you imagine within it.</p><div class="cta-actions"><a class="button button-gold" href="contact.html">Start an Enquiry</a>${brochureButton}</div></section>
   </main>`);
@@ -259,30 +252,63 @@ function home() {
 
 function about() {
   const values = [
-    ["Context before style", "Every decision begins with site, climate, lifestyle and the way people will move through the space."],
-    ["Purposeful luxury", "We favour restraint, comfort and meaning over excess, creating spaces that feel refined without shouting."],
-    ["Material honesty", "Natural textures, durable finishes and thoughtful junctions give each project depth and longevity."],
-    ["Clear collaboration", "Clients are guided with transparent communication, structured milestones and calm decision-making."],
-    ["Enduring details", "Proportion, light, joinery and finishing details are resolved with long-term use in mind."],
-    ["Responsible decisions", "We design with sensitivity toward budget, maintenance, local context and the life of the project."]
+    ["Context before style", "Every decision begins with site, climate, lifestyle and movement."],
+    ["Purposeful luxury", "Refined spaces shaped by restraint, comfort and meaning."],
+    ["Material honesty", "Natural textures, durable finishes and thoughtful junctions."],
+    ["Clear collaboration", "Transparent communication, structured milestones and calm decisions."],
+    ["Enduring details", "Proportion, light, joinery and finishing details resolved for long-term use."],
+    ["Responsible decisions", "Sensitivity toward budget, maintenance, local context and project life."]
+  ];
+  const studioNotes = [
+    ["Founder Message", "&ldquo;Quiet design has the power to change how we live.&rdquo;", "Every IDH project begins with listening. We look for the subtle details that make a space feel calm, personal and enduring, then shape them into architecture and interiors with purpose."],
+    ["Co-founder Message", "&ldquo;The strongest spaces are built from clarity.&rdquo;", "Our role is to make the design journey precise and reassuring, bringing together creative direction, practical decisions and careful execution so each project moves with confidence."]
+  ];
+  const aboutTeam = [
+    ["Founder", "Principal Designer", "assets/team-founder.png", "Guides the studio's creative direction with a focus on proportion, atmosphere and spaces that feel deeply personal."],
+    ["Co-founder", "Design Director", "assets/team-cofounder.png", "Leads design coordination and project clarity, bringing structure, detail and calm decision-making into every stage."],
+    ["Studio Team", "Architecture & Interiors", "assets/team-studio.png", "A collaborative team shaping refined residential, commercial and hospitality spaces."]
   ];
   return layout("about", "about", `
   <main>
-    ${pageHero("About IDH", "A studio shaped by restraint, craft and a sense of place.", "Integrated Design Habitat is an architecture, interiors and spatial design studio based in Manjeri, Kerala.", "architecture_placeholders_webp/05-about-studio-vignette.webp")}
-    <section class="content-section split-feature"><div class="reveal"><p class="eyebrow">Our Journey</p><h2>From thoughtful beginnings to enduring spatial identities.</h2><p>IDH began with a simple belief: spaces should feel intentional, personal and quietly elevated. Our journey continues through residences, commercial interiors and hospitality environments that balance beauty with use.</p></div><img class="reveal" src="architecture_placeholders_webp/03-hero-curved-staircase.webp" alt="Curved architectural staircase" loading="lazy" /></section>
-    <section class="content-section two-column"><article class="reveal"><p class="eyebrow">Vision</p><h2>To shape timeless habitats that enrich daily life.</h2><p>Our vision is to create architecture and interiors that remain relevant beyond trends, rooted in context, proportion and emotional clarity.</p></article><article class="reveal"><p class="eyebrow">Mission</p><h2>To bring clarity, craft and care into every stage.</h2><p>We guide clients from first idea to final realisation through considered design, transparent communication and refined detailing.</p></article></section>
-    <section class="content-section messages"><article class="reveal"><p class="eyebrow">Founder Message</p><h2>&ldquo;Quiet design has the power to change how we live.&rdquo;</h2><p>Every IDH project begins with listening. We look for the subtle details that make a space feel calm, personal and enduring, then shape them into architecture and interiors with purpose.</p></article><article class="reveal"><p class="eyebrow">Co-founder Message</p><h2>&ldquo;The strongest spaces are built from clarity.&rdquo;</h2><p>Our role is to make the design journey precise and reassuring, bringing together creative direction, practical decisions and careful execution so each project moves with confidence.</p></article></section>
-    <section class="content-section"><div class="section-heading reveal"><div><p class="eyebrow">Team Photos</p><h2>The People Behind IDH</h2></div></div><div class="team-grid">${team.map((member) => `<article class="team-card reveal"><img src="${member.image}" alt="${esc(member.name)}" loading="lazy" /><h3>${member.name}</h3><span>${member.role}</span><p>${member.note}</p></article>`).join("")}</div></section>
-    <section class="content-section values-grid">${values.map(([value, copy]) => `<article class="reveal"><span>&#9671;</span><h3>${value}</h3><p>${copy}</p></article>`).join("")}</section>
+    <section class="about-hero page-hero">
+      <img src="architecture_placeholders_webp/05-about-studio-vignette.webp" alt="" aria-hidden="true" />
+      <div class="page-hero-scrim"></div>
+      <div class="page-hero-content reveal">
+        <p class="eyebrow">About IDH</p>
+        <h1>A studio shaped by restraint, craft and a sense of place.</h1>
+        <p>Integrated Design Habitat is an architecture, interiors and spatial design studio based in Manjeri, Kerala, creating refined residential, commercial and hospitality spaces.</p>
+      </div>
+    </section>
+    <section class="about-editorial about-journey reveal">
+      <div><p class="eyebrow">Our Journey</p><h2>From thoughtful beginnings to enduring spatial identities.</h2></div>
+      <p>IDH began with a simple belief: spaces should feel intentional, personal and quietly elevated. Our journey continues through residences, commercial interiors and hospitality environments that balance beauty with use.</p>
+    </section>
+    <section class="about-editorial about-duo">
+      <article class="reveal"><p class="eyebrow">Vision</p><h2>To shape timeless habitats that enrich daily life.</h2><p>Our vision is to create architecture and interiors that remain relevant beyond trends, rooted in context, proportion and emotional clarity.</p></article>
+      <article class="reveal"><p class="eyebrow">Mission</p><h2>To bring clarity, craft and care into every stage.</h2><p>We guide clients from first idea to final realisation through considered design, transparent communication and refined detailing.</p></article>
+    </section>
+    <section class="about-editorial about-notes">
+      <div class="about-section-kicker reveal"><p class="eyebrow">Studio Notes</p><h2>From the Studio</h2></div>
+      <div class="about-note-grid">${studioNotes.map(([label, quote, copy]) => `<article class="reveal"><span>${label}</span><h3>${quote}</h3><p>${copy}</p></article>`).join("")}</div>
+    </section>
+    <section class="about-editorial about-team">
+      <div class="about-section-kicker reveal"><p class="eyebrow">Team</p><h2>The People Behind IDH</h2></div>
+      <div class="about-team-grid">${aboutTeam.map(([name, role, image, note]) => `<article class="reveal"><img src="${image}" alt="${esc(name)}" loading="lazy" /><h3>${name}</h3><span>${role}</span><p>${note}</p></article>`).join("")}</div>
+    </section>
+    <section class="about-editorial about-principles">
+      <div class="about-section-kicker reveal"><p class="eyebrow">Design Principles</p><h2>Design Principles</h2></div>
+      <div class="about-principles-grid">${values.map(([value, copy]) => `<article class="reveal"><span>&#9671;</span><div><h3>${value}</h3><p>${copy}</p></div></article>`).join("")}</div>
+    </section>
   </main>`);
 }
 
 function servicesPage() {
   return layout("services", "services", `
   <main>
-    ${pageHero("Services", "Architecture and interiors composed with quiet precision.", "From concept to delivery, IDH creates spaces that are refined, functional and deeply personal.", "services_section_images_webp/01-architecture-design-curved-staircase.webp")}
-    <section class="content-section"><div class="section-heading reveal"><div><p class="eyebrow">Our Disciplines</p><h2>Design Services</h2></div>${brochureButton}</div><div class="detail-grid">${services.map((service) => `<article class="detail-card reveal"><img src="${service.image}" alt="${esc(service.title)}" loading="lazy" /><span>${service.number}</span><h3>${service.title}</h3><p>${service.detail}</p><a href="contact.html">Discuss this service &rarr;</a></article>`).join("")}</div></section>
-    <section class="contact-cta"><p class="eyebrow">Brochure</p><h2>Explore the IDH studio overview.</h2><p>A concise introduction to our design disciplines, process and project approach.</p><div class="cta-actions">${brochureButton}<a class="button button-gold" href="contact.html">Request a Quote</a></div></section>
+    ${pageHero("Services", "Design Services for Thoughtful Spaces", "Architecture, interiors and spatial design shaped with clarity, craft and purpose.", "services_section_images_webp/01-architecture-design-curved-staircase.webp")}
+    <section class="content-section services-journey" id="design-services"><div class="section-heading reveal"><div><p class="eyebrow">Our Disciplines</p><h2>Design Services</h2></div>${brochureButton}</div><div class="detail-grid">${services.map((service) => `<article class="detail-card reveal" id="${serviceAnchor(service.title)}"><img src="${service.image}" alt="${esc(service.title)}" loading="lazy" /><span>${service.number}</span><h3>${service.title}</h3><p>${service.detail}</p><a href="contact.html">Discuss this service &rarr;</a></article>`).join("")}</div></section>
+    <section class="content-section services-process" id="process"><div class="section-heading reveal"><div><p class="eyebrow">How We Work</p><h2>Our Process</h2></div><p class="section-note">A clear, collaborative path from first conversation to considered realisation.</p></div><div class="timeline-grid">${process.map(([num, title, text]) => `<article class="reveal"><span>${num}</span><h3>${title}</h3><p>${text}</p></article>`).join("")}</div></section>
+    <section class="contact-cta"><p class="eyebrow">Begin a conversation</p><h2>Ready to begin your project?</h2><p>Share your vision with us and we'll guide you through the next steps.</p><div class="cta-actions"><a class="button button-gold" href="contact.html">Start an Enquiry</a>${brochureButton}</div></section>
   </main>`);
 }
 
@@ -291,15 +317,6 @@ function projectsPage() {
   <main>
     ${pageHero("Projects", "Selected spaces crafted with intention.", "A curated selection of residential, commercial, hospitality and spatial design work by IDH.", "architecture_placeholders_webp/06-project-private-residence.webp")}
     <section class="content-section"><div class="project-grid expanded">${projectCards(projects)}</div></section>
-  </main>`);
-}
-
-function processPage() {
-  return layout("process", "process", `
-  <main>
-    ${pageHero("Process", "A collaborative and considered approach.", "Clarity, creativity and confidence at every stage&mdash;from first conversation to final detail.", "architecture_placeholders_webp/04-hero-moody-interior-corner.webp")}
-    <section class="content-section"><div class="section-heading reveal"><div><p class="eyebrow">Method</p><h2>How we shape each project</h2></div>${brochureButton}</div><div class="process-list">${process.map(([num, title, text]) => `<article class="reveal"><span>${num}</span><div><h3>${title}</h3><p>${text}</p></div></article>`).join("")}</div></section>
-    <section class="contact-cta"><p class="eyebrow">Ready to begin?</p><h2>Start with a clear conversation.</h2><div class="cta-actions"><a class="button button-gold" href="${whatsappHref("Hello IDH, I would like to book a design consultation.")}" target="_blank" rel="noopener noreferrer">Book Consultation</a>${brochureButton}</div></section>
   </main>`);
 }
 
@@ -382,7 +399,6 @@ const pages = {
   [meta.about.file]: about(),
   [meta.services.file]: servicesPage(),
   [meta.projects.file]: projectsPage(),
-  [meta.process.file]: processPage(),
   [meta.insights.file]: insightsPage(),
   [meta.careers.file]: careersPage(),
   [meta.contact.file]: contactPage(),
