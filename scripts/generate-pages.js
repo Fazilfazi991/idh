@@ -251,14 +251,6 @@ function home() {
 }
 
 function about() {
-  const values = [
-    ["Context before style", "Every decision begins with site, climate, lifestyle and movement."],
-    ["Purposeful luxury", "Refined spaces shaped by restraint, comfort and meaning."],
-    ["Material honesty", "Natural textures, durable finishes and thoughtful junctions."],
-    ["Clear collaboration", "Transparent communication, structured milestones and calm decisions."],
-    ["Enduring details", "Proportion, light, joinery and finishing details resolved for long-term use."],
-    ["Responsible decisions", "Sensitivity toward budget, maintenance, local context and project life."]
-  ];
   const studioNotes = [
     ["Founder Message", "&ldquo;Quiet design has the power to change how we live.&rdquo;", "Every IDH project begins with listening. We look for the subtle details that make a space feel calm, personal and enduring, then shape them into architecture and interiors with purpose."],
     ["Co-founder Message", "&ldquo;The strongest spaces are built from clarity.&rdquo;", "Our role is to make the design journey precise and reassuring, bringing together creative direction, practical decisions and careful execution so each project moves with confidence."]
@@ -294,10 +286,6 @@ function about() {
     <section class="about-editorial about-team">
       <div class="about-section-kicker reveal"><p class="eyebrow">Team</p><h2>The People Behind IDH</h2></div>
       <div class="about-team-grid">${aboutTeam.map(([name, role, image, note]) => `<article class="reveal"><img src="${image}" alt="${esc(name)}" loading="lazy" /><h3>${name}</h3><span>${role}</span><p>${note}</p></article>`).join("")}</div>
-    </section>
-    <section class="about-editorial about-principles">
-      <div class="about-section-kicker reveal"><p class="eyebrow">Design Principles</p><h2>Design Principles</h2></div>
-      <div class="about-principles-grid">${values.map(([value, copy]) => `<article class="reveal"><span>&#9671;</span><div><h3>${value}</h3><p>${copy}</p></div></article>`).join("")}</div>
     </section>
   </main>`);
 }
