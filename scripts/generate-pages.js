@@ -81,8 +81,14 @@ function footer() {
     ["Projects", "projects.html", "&#9637;"],
     ["Contact", "contact.html", "&#9675;"]
   ];
+  const socialIcons = {
+    Instagram: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.6"/><circle cx="17.3" cy="6.7" r=".8"/></svg>`,
+    Facebook: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8.2h2.1V4.8h-2.9c-3.1 0-4.4 1.9-4.4 4.2v2H6.5v3.6h2.3V20h3.8v-5.4h3l.5-3.6h-3.5V9.4c0-.8.4-1.2 1.4-1.2Z"/></svg>`,
+    LinkedIn: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.1 9.2h3.2V20H5.1zM6.7 4.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6ZM11 9.2h3.1v1.5c.5-.9 1.6-1.8 3.4-1.8 2.4 0 4 1.6 4 4.8V20h-3.2v-5.7c0-1.5-.5-2.4-1.8-2.4-1.4 0-2.2 1-2.2 2.4V20H11z"/></svg>`,
+    YouTube: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.2c-.2-1.1-.9-1.8-2-2C17.3 6 12 6 12 6s-5.3 0-7 .2c-1.1.2-1.8.9-2 2-.2 1.2-.2 3.8-.2 3.8s0 2.6.2 3.8c.2 1.1.9 1.8 2 2 1.7.2 7 .2 7 .2s5.3 0 7-.2c1.1-.2 1.8-.9 2-2 .2-1.2.2-3.8.2-3.8s0-2.6-.2-3.8Z"/><path d="m10.2 14.8 4.7-2.8-4.7-2.8Z"/></svg>`
+  };
   const socials = Object.entries(contact.socials)
-    .map(([label, href]) => `<a href="${href}" target="_blank" rel="noopener noreferrer" aria-label="${label}">${label}</a>`)
+    .map(([label, href]) => `<a href="${href}" target="_blank" rel="noopener noreferrer" aria-label="${label}">${socialIcons[label] || `<span>${label}</span>`}</a>`)
     .join("");
 
   return `
@@ -244,7 +250,6 @@ function home() {
       <div class="about-scene reveal"><img src="architecture_placeholders_webp/05-about-studio-vignette.webp" alt="Atmospheric crafted interior by Integrated Design Habitat" loading="lazy" /><div class="about-panel"><div class="about-label"><p class="eyebrow">About the studio</p><i></i></div><h2>Design-Led.<br />Detail-Driven.<br />Purposeful Spaces.</h2><p>We create timeless environments shaped by intention, craft and a quiet commitment to quality.</p><p>Every project begins with its people and ends with a space that feels entirely their own.</p><a href="about.html">Learn more about us <span>&rsaquo;</span></a></div></div>
       <div class="about-metrics reveal"><div class="metric-card"><i class="metric-icon">&#9671;</i><strong>12+</strong><b></b><span>Years of experience</span></div><div class="metric-card"><i class="metric-icon">&#9635;</i><strong>250+</strong><b></b><span>Projects completed</span></div><div class="metric-card"><i class="metric-icon">&#9678;</i><strong>25+</strong><b></b><span>Cities worldwide</span></div></div>
     </section>
-    <section class="section services-showcase" id="services"><div class="services-heading reveal"><h2>Our Design<br /><em>Services</em></h2><p>Spaces designed.<br />Experiences elevated.</p></div><div class="services-mosaic">${serviceCards(services.slice(0, 6))}</div></section>
     <section class="section journal" id="journal"><div class="section-heading reveal"><div><p class="eyebrow">Insights</p><h2>Journal</h2></div><a class="text-link" href="insights.html">View all articles &rarr;</a></div><div class="journal-grid">${insights.slice(0, 2).map((post) => `<article class="reveal"><img src="${post.image}" alt="${esc(post.title)}" loading="lazy" /><div><small>${post.date} &middot; ${post.category}</small><h3>${post.title}</h3><a href="insights.html">Read more &rarr;</a></div></article>`).join("")}</div></section>
     <section class="contact-cta" id="contact"><p class="eyebrow">Begin a conversation</p><h2>Let's Create Something Timeless</h2><p>Tell us about your project and the life you imagine within it.</p><div class="cta-actions"><a class="button button-gold" href="contact.html">Start an Enquiry</a>${brochureButton}</div></section>
   </main>`);

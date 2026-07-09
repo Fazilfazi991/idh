@@ -8,7 +8,9 @@ const contact = {
   whatsapp: "919917070111",
   socials: {
     Instagram: "https://www.instagram.com/idh_llc?igsh=YXNlZWNsNHdocXZj",
-    Facebook: "https://www.facebook.com/share/18zVrRfJFG/"
+    Facebook: "https://www.facebook.com/share/18zVrRfJFG/",
+    LinkedIn: "https://www.linkedin.com/company/integrated-design-habitat/",
+    YouTube: "https://youtube.com/@integrateddesignhabitatidh?si=MFk1Va1-z9uE1dz3"
   }
 };
 
