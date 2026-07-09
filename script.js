@@ -144,3 +144,109 @@ document.addEventListener('click', event => {
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape') closeVideoModal();
 });
+
+const publicSupabaseConfig = window.IDH_SUPABASE_CONFIG || {};
+const publicSupabase = window.supabase?.createClient && publicSupabaseConfig.supabaseUrl && publicSupabaseConfig.supabaseAnonKey
+  ? window.supabase.createClient(publicSupabaseConfig.supabaseUrl, publicSupabaseConfig.supabaseAnonKey)
+  : null;
+
+const fallbackImage = 'architecture_placeholders_webp/04-hero-moody-interior-corner.webp';
+const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#039;'
+})[char]);
+const displayDate = value => value ? new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(value)) : 'IDH Journal';
+const paragraphs = value => String(value || '').split(/\n{2,}/).map(text => `<p>${escapeHtml(text)}</p>`).join('');
+
+const skeleton = count => Array.from({ length: count }, () => '<article class="dynamic-skeleton"></article>').join('');
+const empty = text => `<p class="dynamic-empty">${text}</p>`;
+
+function renderProject(project) {
+  return `<article class="project-card reveal">
+    <div><img src="${escapeHtml(project.cover_image_url || fallbackImage)}" alt="${escapeHtml(project.title)}" loading="lazy" /></div>
+    <p>${escapeHtml(project.category || project.project_type || 'Project')} &middot; ${escapeHtml(project.location || '')}</p>
+    <h3>${escapeHtml(project.title)}</h3>
+    <small>${escapeHtml(project.short_description || '')}</small>
+  </article>`;
+}
+
+function renderCareer(job) {
+  const email = job.application_email || 'careers@idharchitecture.com';
+  return `<article class="job-card reveal">
+    <span>${escapeHtml(job.employment_type || 'Role')}</span>
+    <h3>${escapeHtml(job.job_title)}</h3>
+    <p>${escapeHtml([job.location, job.work_mode].filter(Boolean).join(' &middot; '))}</p>
+    <small>${escapeHtml(job.short_description || '')}</small>
+    <a href="mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(`Career Application: ${job.job_title}`)}">Apply &rarr;</a>
+  </article>`;
+}
+
+function renderInsight(post, compact = false) {
+  const href = `insights/${encodeURIComponent(post.slug)}`;
+  if (compact) {
+    return `<article class="reveal">
+      <img src="${escapeHtml(post.cover_image_url || fallbackImage)}" alt="${escapeHtml(post.title)}" loading="lazy" />
+      <div><small>${escapeHtml(post.category_label || post.content_type)} &middot; ${displayDate(post.published_date)}</small><h3>${escapeHtml(post.title)}</h3><a href="${href}">Read more &rarr;</a></div>
+    </article>`;
+  }
+  return `<article class="insight-card reveal" id="${escapeHtml(String(post.content_type || '').toLowerCase())}">
+    <img src="${escapeHtml(post.cover_image_url || fallbackImage)}" alt="${escapeHtml(post.title)}" loading="lazy" />
+    <div><span>${escapeHtml(post.content_type)}</span><small>${escapeHtml(post.category_label || displayDate(post.published_date))}</small><h3>${escapeHtml(post.title)}</h3><p>${escapeHtml(post.excerpt || '')}</p><a href="${href}">Read more &rarr;</a></div>
+  </article>`;
+}
+
+async function hydratePublicData() {
+  if (!publicSupabase) return;
+
+  for (const grid of document.querySelectorAll('[data-dynamic-projects]')) {
+    const limit = Number(grid.dataset.limit || 0);
+    grid.innerHTML = skeleton(limit || 6);
+    let query = publicSupabase.from('projects').select('*').eq('status', 'published').order('sort_order');
+    if (grid.dataset.featured === 'true') query = query.eq('featured', true);
+    if (limit) query = query.limit(limit);
+    const { data, error } = await query;
+    grid.innerHTML = error ? empty('Unable to load projects right now.') : data?.length ? data.map(renderProject).join('') : empty('No items available at the moment.');
+    grid.querySelectorAll('.reveal').forEach(observeReveal);
+  }
+
+  for (const grid of document.querySelectorAll('[data-dynamic-careers]')) {
+    grid.innerHTML = skeleton(3);
+    const { data, error } = await publicSupabase.from('careers').select('*').eq('status', 'published').order('sort_order');
+    grid.innerHTML = error ? empty('Unable to load careers right now.') : data?.length ? data.map(renderCareer).join('') : empty('No items available at the moment.');
+    grid.querySelectorAll('.reveal').forEach(observeReveal);
+  }
+
+  for (const grid of document.querySelectorAll('[data-dynamic-insights]')) {
+    const limit = Number(grid.dataset.limit || 0);
+    grid.innerHTML = skeleton(limit || 4);
+    let query = publicSupabase.from('insights').select('*').eq('status', 'published').order('sort_order').order('published_date', { ascending: false });
+    if (limit) query = query.limit(limit);
+    const { data, error } = await query;
+    grid.innerHTML = error ? empty('Unable to load insights right now.') : data?.length ? data.map(post => renderInsight(post, Boolean(limit))).join('') : empty('No items available at the moment.');
+    grid.querySelectorAll('.reveal').forEach(observeReveal);
+  }
+}
+
+async function hydrateInsightDetail() {
+  const detail = document.querySelector('[data-insight-detail]');
+  if (!detail || !publicSupabase) return;
+  const slug = decodeURIComponent(location.pathname.split('/').filter(Boolean).pop() || new URLSearchParams(location.search).get('slug') || '');
+  const body = document.querySelector('[data-insight-body]');
+  const cover = document.querySelector('[data-insight-cover]');
+  const { data, error } = await publicSupabase.from('insights').select('*').eq('slug', slug).eq('status', 'published').maybeSingle();
+  if (error || !data) {
+    detail.innerHTML = '<p class="eyebrow">Insights</p><h1>Insight unavailable.</h1><p>No items available at the moment.</p>';
+    body.innerHTML = '';
+    return;
+  }
+  document.title = data.seo_title || `${data.title} - IDH Journal`;
+  if (cover && data.cover_image_url) cover.src = data.cover_image_url;
+  detail.innerHTML = `<p class="eyebrow">${escapeHtml(data.content_type)}</p><h1>${escapeHtml(data.title)}</h1><p>${escapeHtml(data.excerpt || '')}</p>`;
+  body.innerHTML = `${paragraphs(data.body_content || data.excerpt)}<p><a href="../insights.html">Back to insights &rarr;</a></p>`;
+}
+
+hydratePublicData();
+hydrateInsightDetail();

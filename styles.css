@@ -321,3 +321,9 @@ h1,h2,h3,
 .footer-socials a[aria-label="Facebook"] svg,
 .footer-socials a[aria-label="LinkedIn"] svg,
 .footer-socials a[aria-label="YouTube"] svg{fill:currentColor;stroke:none}
+
+/* Dynamic Supabase states */
+.dynamic-empty{grid-column:1/-1;border:1px solid var(--line);padding:34px;color:#aaa59d;text-align:center}
+.dynamic-skeleton{min-height:280px;border:1px solid var(--line);background:linear-gradient(90deg,rgba(255,255,255,.02),rgba(180,138,73,.08),rgba(255,255,255,.02));background-size:220% 100%;animation:idhSkeleton 1.4s ease-in-out infinite}
+@keyframes idhSkeleton{0%{background-position:100% 0}100%{background-position:-100% 0}}
+.insight-detail-copy{font-size:16px;line-height:1.85}

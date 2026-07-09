@@ -16,6 +16,20 @@
       "permanent": true
     }
   ],
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/admin/login",
+      "destination": "/admin-login.html"
+    },
+    {
+      "source": "/insights/:slug",
+      "destination": "/insight.html"
+    }
+  ],
   "headers": [
     {
       "source": "/index.html",

@@ -148,6 +148,8 @@ function layout(key, active, body) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="${esc(page.description)}" />
   <title>${esc(page.title)}</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -157,6 +159,9 @@ function layout(key, active, body) {
 ${header(active)}
 ${body}
 ${footer()}
+  <script>window.IDH_SUPABASE_CONFIG = window.IDH_SUPABASE_CONFIG || {};</script>
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js?v=${cacheKey}"></script>
 </body>
 </html>
@@ -250,7 +255,8 @@ function home() {
       <div class="about-scene reveal"><img src="architecture_placeholders_webp/05-about-studio-vignette.webp" alt="Atmospheric crafted interior by Integrated Design Habitat" loading="lazy" /><div class="about-panel"><div class="about-label"><p class="eyebrow">About the studio</p><i></i></div><h2>Design-Led.<br />Detail-Driven.<br />Purposeful Spaces.</h2><p>We create timeless environments shaped by intention, craft and a quiet commitment to quality.</p><p>Every project begins with its people and ends with a space that feels entirely their own.</p><a href="about.html">Learn more about us <span>&rsaquo;</span></a></div></div>
       <div class="about-metrics reveal"><div class="metric-card"><i class="metric-icon">&#9671;</i><strong>12+</strong><b></b><span>Years of experience</span></div><div class="metric-card"><i class="metric-icon">&#9635;</i><strong>250+</strong><b></b><span>Projects completed</span></div><div class="metric-card"><i class="metric-icon">&#9678;</i><strong>25+</strong><b></b><span>Cities worldwide</span></div></div>
     </section>
-    <section class="section journal" id="journal"><div class="section-heading reveal"><div><p class="eyebrow">Insights</p><h2>Journal</h2></div><a class="text-link" href="insights.html">View all articles &rarr;</a></div><div class="journal-grid">${insights.slice(0, 2).map((post) => `<article class="reveal"><img src="${post.image}" alt="${esc(post.title)}" loading="lazy" /><div><small>${post.date} &middot; ${post.category}</small><h3>${post.title}</h3><a href="insights.html">Read more &rarr;</a></div></article>`).join("")}</div></section>
+    <section class="section journal" id="journal"><div class="section-heading reveal"><div><p class="eyebrow">Insights</p><h2>Journal</h2></div><a class="text-link" href="insights.html">View all articles &rarr;</a></div><div class="journal-grid" data-dynamic-insights data-limit="2">${insights.slice(0, 2).map((post) => `<article class="reveal"><img src="${post.image}" alt="${esc(post.title)}" loading="lazy" /><div><small>${post.date} &middot; ${post.category}</small><h3>${post.title}</h3><a href="insights.html">Read more &rarr;</a></div></article>`).join("")}</div></section>
+    <section class="section projects-section" id="projects"><div class="section-heading reveal"><div><p class="eyebrow">Featured projects</p><h2>Spaces Crafted With Intention</h2></div><a class="text-link" href="projects.html">View all projects &rarr;</a></div><div class="project-grid" data-dynamic-projects data-featured="true" data-limit="4">${projectCards(projects.slice(0, 4))}</div></section>
     <section class="contact-cta" id="contact"><p class="eyebrow">Begin a conversation</p><h2>Let's Create Something Timeless</h2><p>Tell us about your project and the life you imagine within it.</p><div class="cta-actions"><a class="button button-gold" href="contact.html">Start an Enquiry</a>${brochureButton}</div></section>
   </main>`);
 }
@@ -309,7 +315,7 @@ function projectsPage() {
   return layout("projects", "projects", `
   <main>
     ${pageHero("Projects", "Selected spaces crafted with intention.", "A curated selection of residential, commercial, hospitality and spatial design work by IDH.", "architecture_placeholders_webp/06-project-private-residence.webp")}
-    <section class="content-section"><div class="project-grid expanded">${projectCards(projects)}</div></section>
+    <section class="content-section"><div class="project-grid expanded" data-dynamic-projects>${projectCards(projects)}</div></section>
   </main>`);
 }
 
@@ -342,7 +348,7 @@ function insightsPage() {
       </div>
       <div class="insight-grid" data-youtube-insights aria-live="polite">${youtubeFallbackCards}</div>
     </section>
-    <section class="content-section insight-grid">${manualInsights.map((post) => `<article class="insight-card reveal" id="${post.category.toLowerCase()}"><img src="${post.image}" alt="${esc(post.title)}" loading="lazy" /><div><span>${post.category}</span><small>${post.date}</small><h3>${post.title}</h3><p>${post.excerpt}</p><a href="contact.html">Read more &rarr;</a></div></article>`).join("")}</section>
+    <section class="content-section insight-grid" data-dynamic-insights>${manualInsights.map((post) => `<article class="insight-card reveal" id="${post.category.toLowerCase()}"><img src="${post.image}" alt="${esc(post.title)}" loading="lazy" /><div><span>${post.category}</span><small>${post.date}</small><h3>${post.title}</h3><p>${post.excerpt}</p><a href="insights.html">Read more &rarr;</a></div></article>`).join("")}</section>
     <div class="video-modal" data-video-modal aria-hidden="true">
       <button class="video-modal-close" type="button" data-video-modal-close aria-label="Close video">&times;</button>
       <div class="video-modal-frame" role="dialog" aria-modal="true" aria-label="IDH Insights video">
@@ -352,11 +358,29 @@ function insightsPage() {
   </main>`);
 }
 
+function insightDetailPage() {
+  return layout("insights", "insights", `
+  <main>
+    <section class="page-hero insight-detail-hero">
+      <img src="architecture_placeholders_webp/10-insight-designing-wellbeing.webp" alt="" aria-hidden="true" data-insight-cover />
+      <div class="page-hero-scrim"></div>
+      <div class="page-hero-content reveal" data-insight-detail>
+        <p class="eyebrow">Insights</p>
+        <h1>Loading insight...</h1>
+        <p>Please wait while the article opens.</p>
+      </div>
+    </section>
+    <section class="content-section policy-copy insight-detail-copy" data-insight-body>
+      <p>Loading...</p>
+    </section>
+  </main>`);
+}
+
 function careersPage() {
   return layout("careers", "careers", `
   <main>
     ${pageHero("Careers", "Join a studio where detail still matters.", "Explore vacancies, internships and future opportunities with Integrated Design Habitat.", "architecture_placeholders_webp/07-project-commercial-office.webp")}
-    <section class="content-section"><div class="section-heading reveal"><div><p class="eyebrow">Open Roles</p><h2>Vacancies & Internships</h2></div></div><div class="job-grid">${jobs.map((job) => `<article class="job-card reveal"><span>${job.type}</span><h3>${job.title}</h3><p>${job.location}</p><small>${job.summary}</small><a href="#apply">Apply &rarr;</a></article>`).join("")}</div></section>
+    <section class="content-section"><div class="section-heading reveal"><div><p class="eyebrow">Open Roles</p><h2>Vacancies & Internships</h2></div></div><div class="job-grid" data-dynamic-careers>${jobs.map((job) => `<article class="job-card reveal"><span>${job.type}</span><h3>${job.title}</h3><p>${job.location}</p><small>${job.summary}</small><a href="#apply">Apply &rarr;</a></article>`).join("")}</div></section>
     <section class="content-section form-section" id="apply"><div class="form-copy reveal"><p class="eyebrow">Apply</p><h2>Career Application</h2><p>Career, job and internship enquiries route to <strong>${contact.careersEmail}</strong>.</p></div>${enquiryForm("career")}</section>
   </main>`);
 }
@@ -393,6 +417,7 @@ const pages = {
   [meta.services.file]: servicesPage(),
   [meta.projects.file]: projectsPage(),
   [meta.insights.file]: insightsPage(),
+  ["insight.html"]: insightDetailPage(),
   [meta.careers.file]: careersPage(),
   [meta.contact.file]: contactPage(),
   [meta.privacy.file]: privacyPage()

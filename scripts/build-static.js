@@ -13,8 +13,14 @@ const files = [
   "careers.html",
   "contact.html",
   "privacy-policy.html",
+  "insight.html",
+  "admin.html",
+  "admin-login.html",
   "styles.css",
   "script.js",
+  "admin.css",
+  "admin.js",
+  "supabase-config.example.js",
   path.join("public", "IDH-studio-overview.pdf")
 ];
 const directories = [
@@ -33,6 +39,14 @@ for (const file of files) {
   fs.mkdirSync(path.dirname(target), { recursive: true });
   fs.copyFileSync(path.join(root, file), target);
 }
+
+const runtimeConfig = `window.IDH_SUPABASE_CONFIG = {
+  supabaseUrl: ${JSON.stringify(process.env.VITE_SUPABASE_URL || "")},
+  supabaseAnonKey: ${JSON.stringify(process.env.VITE_SUPABASE_ANON_KEY || "")}
+};
+`;
+fs.writeFileSync(path.join(root, "supabase-config.js"), runtimeConfig, "utf8");
+fs.writeFileSync(path.join(output, "supabase-config.js"), runtimeConfig, "utf8");
 
 for (const directory of directories) {
   fs.cpSync(path.join(root, directory), path.join(output, directory), {

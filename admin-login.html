@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>IDH Admin Login</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-auth-page">
+  <main class="admin-auth">
+    <section class="admin-auth-panel">
+      <img src="assets/idh-logo-transparent.png" alt="Integrated Design Habitat" />
+      <p class="eyebrow">Admin Access</p>
+      <h1>Sign in to manage IDH content.</h1>
+      <form id="adminLoginForm">
+        <label>Email<input type="email" name="email" required autocomplete="email" /></label>
+        <label>Password<input type="password" name="password" required autocomplete="current-password" /></label>
+        <button class="button button-gold" type="submit">Sign In</button>
+        <p class="admin-message" data-admin-message></p>
+      </form>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
