@@ -211,6 +211,10 @@ async function loadStats() {
     supabaseClient.from('careers').select('id,status'),
     supabaseClient.from('insights').select('id,status')
   ]);
+  if (projects.error || careers.error || insights.error) {
+    wrap.innerHTML = '<p class="admin-muted">Unable to load dashboard totals.</p>';
+    return;
+  }
   const all = [...(projects.data || []), ...(careers.data || []), ...(insights.data || [])];
   const stats = [
     ['Total projects', projects.data?.length || 0],
@@ -222,19 +226,12 @@ async function loadStats() {
   wrap.innerHTML = stats.map(([label, value]) => `<article class="admin-stat"><strong>${value}</strong><span>${label}</span></article>`).join('');
 }
 
-async function initAdmin() {
-  const session = await protectAdmin();
-  if (!session || !$('.admin-page')) return;
-  $('[data-admin-user]').textContent = session.user.email;
-  ['projects','careers','insights'].forEach(renderManager);
-  await Promise.all(['projects','careers','insights'].map(loadList));
-  await loadStats();
-
+function bindAdminUi() {
   $$('[data-admin-tab]').forEach(button => button.addEventListener('click', () => {
     $$('[data-admin-tab]').forEach(btn => btn.classList.remove('active'));
     $$('.admin-section').forEach(section => section.classList.remove('active'));
     button.classList.add('active');
-    $(`#${button.dataset.adminTab}`).classList.add('active');
+    $(`#${button.dataset.adminTab}`)?.classList.add('active');
   }));
 
   document.addEventListener('input', event => {
@@ -258,7 +255,8 @@ async function initAdmin() {
     const refresh = event.target.closest('[data-refresh]');
     if (edit) {
       const list = $(`[data-list="${edit.dataset.edit}"]`);
-      fillForm(edit.dataset.edit, list._items.find(item => item.id === edit.dataset.id));
+      const item = list?._items?.find(entry => entry.id === edit.dataset.id);
+      if (item) fillForm(edit.dataset.edit, item);
     }
     if (del) deleteItem(del.dataset.delete, del.dataset.id);
     if (clear) {
@@ -273,6 +271,16 @@ async function initAdmin() {
     await supabaseClient.auth.signOut();
     location.href = 'admin-login.html';
   });
+}
+
+async function initAdmin() {
+  const session = await protectAdmin();
+  if (!session || !$('.admin-page')) return;
+  $('[data-admin-user]').textContent = session.user.email;
+  ['projects','careers','insights'].forEach(renderManager);
+  bindAdminUi();
+  loadStats();
+  ['projects','careers','insights'].forEach(loadList);
 }
 
 handleLogin();
