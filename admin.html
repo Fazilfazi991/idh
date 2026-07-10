@@ -17,6 +17,7 @@
       <button data-admin-tab="projects">Projects</button>
       <button data-admin-tab="careers">Careers</button>
       <button data-admin-tab="insights">Insights</button>
+      <button data-admin-tab="analytics">Analytics</button>
     </nav>
     <button class="admin-logout" data-admin-logout>Logout</button>
   </aside>
@@ -30,10 +31,23 @@
     </header>
     <section id="dashboard" class="admin-section active">
       <div class="admin-stats" data-admin-stats></div>
+      <div class="admin-dashboard-tables" data-dashboard-tables></div>
     </section>
     <section id="projects" class="admin-section" data-manager="projects"></section>
     <section id="careers" class="admin-section" data-manager="careers"></section>
     <section id="insights" class="admin-section" data-manager="insights"></section>
+    <section id="analytics" class="admin-section">
+      <div class="manager-head">
+        <div><p class="eyebrow">Analytics</p><h2>Website Activity</h2><p>Simple Supabase event tracking for visits, reads, project views and career clicks.</p></div>
+      </div>
+      <div class="admin-filters" data-analytics-range>
+        <button class="active" data-range="today">Today</button>
+        <button data-range="7">7 days</button>
+        <button data-range="30">30 days</button>
+        <button data-range="all">All time</button>
+      </div>
+      <div class="admin-dashboard-tables" data-analytics-tables></div>
+    </section>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>

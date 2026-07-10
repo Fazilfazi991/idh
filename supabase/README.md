@@ -14,3 +14,14 @@
    - `supabaseAnonKey`
 
 `supabase-config.js` is ignored by git. On Vercel, make sure the deployed build includes an equivalent config file or inject `window.IDH_SUPABASE_CONFIG` before `script.js`.
+
+Project categories are fixed to:
+
+- Residential Architecture
+- Residential Interior
+- Commercial Architecture
+- Commercial Interior
+- Landscape
+- Others
+
+The analytics table stores only basic activity events such as page views, project views, insight reads and career apply clicks. It does not store names, emails, phone numbers or IP addresses. Public visitors can insert events only; admin users can read analytics from the dashboard.

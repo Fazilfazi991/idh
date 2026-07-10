@@ -190,6 +190,15 @@ const serviceAnchor = (title) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
+const projectCategories = ["Residential Architecture", "Residential Interior", "Commercial Architecture", "Commercial Interior", "Landscape", "Others"];
+const projectCategory = (project) => project.category || ({
+  Residential: "Residential Architecture",
+  Interiors: "Residential Interior",
+  Commercial: "Commercial Interior",
+  Hospitality: "Commercial Interior",
+  Architecture: "Residential Architecture"
+})[project.type] || "Others";
+
 const serviceCards = (items = services) =>
   items.map((service) => `
     <article class="lux-card reveal">
@@ -202,11 +211,12 @@ const serviceCards = (items = services) =>
 
 const projectCards = (items = projects) =>
   items.map((project) => `
-    <article class="project-card reveal">
+    <article class="project-card reveal" data-category="${esc(projectCategory(project))}">
       <div><img src="${project.image}" alt="${esc(project.title)}" loading="lazy" /></div>
-      <p>${project.type} &middot; ${project.location}</p>
+      <p>${projectCategory(project)} &middot; ${project.location}</p>
       <h3>${project.title}</h3>
       <small>${project.excerpt}</small>
+      <a href="projects/${serviceAnchor(project.title)}">View project &rarr;</a>
     </article>`).join("");
 
 function enquiryForm(type = "general") {
@@ -315,7 +325,31 @@ function projectsPage() {
   return layout("projects", "projects", `
   <main>
     ${pageHero("Projects", "Selected spaces crafted with intention.", "A curated selection of residential, commercial, hospitality and spatial design work by IDH.", "architecture_placeholders_webp/06-project-private-residence.webp")}
-    <section class="content-section"><div class="project-grid expanded" data-dynamic-projects>${projectCards(projects)}</div></section>
+    <section class="content-section">
+      <div class="project-category-filter reveal" data-project-filters>
+        <button class="active" data-project-category="">All</button>
+        ${projectCategories.map((category) => `<button data-project-category="${category}">${category}</button>`).join("")}
+      </div>
+      <div class="project-grid expanded" data-dynamic-projects>${projectCards(projects)}</div>
+    </section>
+  </main>`);
+}
+
+function projectDetailPage() {
+  return layout("projects", "projects", `
+  <main>
+    <section class="page-hero project-detail-hero">
+      <img src="architecture_placeholders_webp/06-project-private-residence.webp" alt="" aria-hidden="true" data-project-cover />
+      <div class="page-hero-scrim"></div>
+      <div class="page-hero-content reveal" data-project-detail>
+        <p class="eyebrow">Projects</p>
+        <h1>Loading project...</h1>
+        <p>Please wait while the project opens.</p>
+      </div>
+    </section>
+    <section class="content-section policy-copy insight-detail-copy" data-project-body>
+      <p>Loading...</p>
+    </section>
   </main>`);
 }
 
@@ -380,7 +414,7 @@ function careersPage() {
   return layout("careers", "careers", `
   <main>
     ${pageHero("Careers", "Join a studio where detail still matters.", "Explore vacancies, internships and future opportunities with Integrated Design Habitat.", "architecture_placeholders_webp/07-project-commercial-office.webp")}
-    <section class="content-section"><div class="section-heading reveal"><div><p class="eyebrow">Open Roles</p><h2>Vacancies & Internships</h2></div></div><div class="job-grid" data-dynamic-careers>${jobs.map((job) => `<article class="job-card reveal"><span>${job.type}</span><h3>${job.title}</h3><p>${job.location}</p><small>${job.summary}</small><a href="#apply">Apply &rarr;</a></article>`).join("")}</div></section>
+    <section class="content-section"><div class="section-heading reveal"><div><p class="eyebrow">Open Roles</p><h2>Vacancies & Internships</h2></div></div><div class="job-grid" data-dynamic-careers>${jobs.map((job) => `<article class="job-card reveal"><span>${job.type}</span><h3>${job.title}</h3><p>${job.location}</p><small>${job.summary}</small><a data-career-apply data-role="${serviceAnchor(job.title)}" href="#apply">Apply &rarr;</a></article>`).join("")}</div></section>
     <section class="content-section form-section" id="apply"><div class="form-copy reveal"><p class="eyebrow">Apply</p><h2>Career Application</h2><p>Career, job and internship enquiries route to <strong>${contact.careersEmail}</strong>.</p></div>${enquiryForm("career")}</section>
   </main>`);
 }
@@ -416,6 +450,7 @@ const pages = {
   [meta.about.file]: about(),
   [meta.services.file]: servicesPage(),
   [meta.projects.file]: projectsPage(),
+  ["project.html"]: projectDetailPage(),
   [meta.insights.file]: insightsPage(),
   ["insight.html"]: insightDetailPage(),
   [meta.careers.file]: careersPage(),

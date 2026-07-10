@@ -26,8 +26,16 @@
       "destination": "/admin-login.html"
     },
     {
+      "source": "/admin/analytics",
+      "destination": "/admin.html"
+    },
+    {
       "source": "/insights/:slug",
       "destination": "/insight.html"
+    },
+    {
+      "source": "/projects/:slug",
+      "destination": "/project.html"
     }
   ],
   "headers": [

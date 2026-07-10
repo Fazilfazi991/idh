@@ -7,10 +7,12 @@ const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 const slugify = value => String(value || '').toLowerCase().trim().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const jsonArray = value => String(value || '').split('\n').map(item => item.trim()).filter(Boolean);
+const projectCategories = ['Residential Architecture', 'Residential Interior', 'Commercial Architecture', 'Commercial Interior', 'Landscape', 'Others'];
+const projectCategorySelect = `select:${projectCategories.join('|')}`;
 
 const fields = {
   projects: [
-    ['title','Title','text','required'], ['slug','Slug','text','required'], ['category','Category','text','required'], ['location','Location','text','required'],
+    ['title','Title','text','required'], ['slug','Slug','text','required'], ['category','Category',projectCategorySelect,'required'], ['location','Location','text','required'],
     ['short_description','Short description','textarea','required'], ['full_description','Full description','textarea',''], ['project_type','Project type','text',''],
     ['year','Year','text',''], ['client_name','Client name','text',''], ['status','Status','select:draft|published',''], ['featured','Featured','checkbox',''],
     ['sort_order','Sort order','number',''], ['cover_image_url','Cover image URL','text','required'], ['gallery_image_urls','Gallery image URLs, one per line','textarea','']
@@ -81,7 +83,7 @@ async function handleLogin() {
 function inputFor([name, label, type, required]) {
   if (type === 'checkbox') return `<label><span>${label}</span><input type="checkbox" name="${name}" /></label>`;
   if (type.startsWith('select:')) {
-    return `<label>${label}<select name="${name}">${type.slice(7).split('|').map(v => `<option value="${v}">${v}</option>`).join('')}</select></label>`;
+    return `<label>${label}<select name="${name}" ${required}><option value="">Select ${label}</option>${type.slice(7).split('|').map(v => `<option value="${v}">${v}</option>`).join('')}</select></label>`;
   }
   if (type === 'textarea') return `<label class="full">${label}<textarea name="${name}" rows="4" ${required}></textarea></label>`;
   return `<label>${label}<input type="${type}" name="${name}" ${required} /></label>`;
@@ -89,10 +91,15 @@ function inputFor([name, label, type, required]) {
 
 function renderManager(table) {
   const node = $(`[data-manager="${table}"]`);
+  const filter = table === 'projects' ? `
+      <select class="admin-filter-select" data-category-filter>
+        <option value="">All categories</option>
+        ${projectCategories.map(category => `<option value="${category}">${category}</option>`).join('')}
+      </select>` : '';
   node.innerHTML = `
     <div class="manager-head">
       <div><p class="eyebrow">${table}</p><h2>${titles[table]}</h2><p>Manage published and draft content.</p></div>
-      <button class="button button-outline" data-refresh="${table}">Refresh</button>
+      <div class="form-actions">${filter}<button class="button button-outline" data-refresh="${table}">Refresh</button></div>
     </div>
     <div class="manager-grid">
       <form class="admin-form" data-form="${table}">
@@ -171,7 +178,10 @@ function fillForm(table, item) {
 async function loadList(table) {
   const list = $(`[data-list="${table}"]`);
   list.innerHTML = '<p class="admin-muted">Loading...</p>';
-  const { data, error } = await supabaseClient.from(table).select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false });
+  let query = supabaseClient.from(table).select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false });
+  const category = table === 'projects' ? $('[data-category-filter]')?.value : '';
+  if (category) query = query.eq('category', category);
+  const { data, error } = await query;
   if (error) {
     list.innerHTML = '<p class="admin-muted">Unable to load items.</p>';
     return;
@@ -184,7 +194,7 @@ async function loadList(table) {
     <article class="admin-item" data-id="${item.id}">
       <div>
         <h3>${item[primaryField[table]] || item.title}</h3>
-        <p><span class="admin-badge">${item.status || 'draft'}</span>${item.slug || ''}</p>
+        <p><span class="admin-badge">${item.status || 'draft'}</span>${table === 'projects' && item.category ? `${item.category} · ` : ''}${item.slug || ''}</p>
       </div>
       <div class="admin-item-actions">
         <button class="icon-action" data-edit="${table}" data-id="${item.id}">E</button>
@@ -203,27 +213,155 @@ async function deleteItem(table, id) {
   }
 }
 
+const startOfToday = () => {
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+  return date.toISOString();
+};
+
+const startOfMonth = () => {
+  const date = new Date();
+  date.setDate(1);
+  date.setHours(0, 0, 0, 0);
+  return date.toISOString();
+};
+
+const startOfDaysAgo = days => {
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  date.setHours(0, 0, 0, 0);
+  return date.toISOString();
+};
+
+async function countRows(table, filters = {}) {
+  let query = supabaseClient.from(table).select('id', { count: 'exact', head: true });
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) query = query.eq(key, value);
+  });
+  const { count, error } = await query;
+  return error ? 0 : count || 0;
+}
+
+async function countEvents(eventType, since) {
+  let query = supabaseClient.from('analytics_events').select('id', { count: 'exact', head: true }).eq('event_type', eventType);
+  if (since) query = query.gte('created_at', since);
+  const { count, error } = await query;
+  return error ? 0 : count || 0;
+}
+
+const eventLabel = event => ({
+  page_view: 'Page visit',
+  project_view: 'Project view',
+  insight_view: 'Insight read',
+  career_view: 'Career page visit',
+  career_apply_click: 'Career apply click'
+})[event.event_type] || event.event_type;
+
+const eventTarget = event => event.item_slug || event.page_path || event.item_type || 'Website';
+
+const eventDate = value => value ? new Intl.DateTimeFormat('en', {
+  day: 'numeric',
+  month: 'short',
+  hour: '2-digit',
+  minute: '2-digit'
+}).format(new Date(value)) : '';
+
+function aggregateEvents(events, eventType) {
+  const map = new Map();
+  events.filter(event => event.event_type === eventType).forEach(event => {
+    const key = event.item_slug || event.page_path || 'unknown';
+    const current = map.get(key) || { label: key, count: 0 };
+    current.count += 1;
+    map.set(key, current);
+  });
+  return Array.from(map.values()).sort((a, b) => b.count - a.count).slice(0, 8);
+}
+
+function tableCard(title, headers, rows, emptyText = 'No activity yet.') {
+  const body = rows.length
+    ? rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')
+    : `<tr><td colspan="${headers.length}">${emptyText}</td></tr>`;
+  return `<article class="admin-table-card"><h3>${title}</h3><table class="admin-table"><thead><tr>${headers.map(header => `<th>${header}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></article>`;
+}
+
+async function loadActivityTables(target, since, mode = 'dashboard') {
+  const wrap = $(target);
+  if (!wrap) return;
+  wrap.innerHTML = '<p class="admin-muted">Loading activity...</p>';
+  let query = supabaseClient.from('analytics_events').select('*').order('created_at', { ascending: false }).limit(300);
+  if (since) query = query.gte('created_at', since);
+  const { data, error } = await query;
+  if (error) {
+    wrap.innerHTML = '<p class="admin-muted">Unable to load analytics.</p>';
+    return;
+  }
+  const events = data || [];
+  const projectRows = aggregateEvents(events, 'project_view').map(item => [`<strong>${item.label}</strong>`, item.count]);
+  const insightRows = aggregateEvents(events, 'insight_view').map(item => [`<strong>${item.label}</strong>`, item.count]);
+  const pageRows = aggregateEvents(events, 'page_view').map(item => [`<strong>${item.label}</strong>`, item.count]);
+  const applyRows = aggregateEvents(events, 'career_apply_click').map(item => [`<strong>${item.label}</strong>`, item.count]);
+  const recentRows = events.slice(0, 10).map(event => [`<strong>${eventLabel(event)}</strong><small>${eventTarget(event)}</small>`, eventDate(event.created_at)]);
+  const cards = mode === 'analytics'
+    ? [
+      tableCard('Visits by page', ['Page', 'Visits'], pageRows),
+      tableCard('Most viewed projects', ['Project', 'Views'], projectRows),
+      tableCard('Most read insights', ['Insight', 'Reads'], insightRows),
+      tableCard('Career apply clicks', ['Role / Action', 'Clicks'], applyRows),
+      tableCard('Recent analytics events', ['Event', 'Time'], recentRows)
+    ]
+    : [
+    tableCard('Most viewed projects', ['Project', 'Views'], projectRows),
+    tableCard('Most read insights', ['Insight', 'Reads'], insightRows),
+    tableCard('Recent activity', ['Activity', 'Time'], recentRows)
+  ];
+  wrap.innerHTML = cards.join('');
+}
+
 async function loadStats() {
   const wrap = $('[data-admin-stats]');
   if (!wrap) return;
-  const [projects, careers, insights] = await Promise.all([
-    supabaseClient.from('projects').select('id,status'),
-    supabaseClient.from('careers').select('id,status'),
-    supabaseClient.from('insights').select('id,status')
+  const [
+    websiteVisits,
+    todayVisits,
+    monthVisits,
+    projectViews,
+    insightReads,
+    careerVisits,
+    applyClicks,
+    publishedProjects,
+    openCareers,
+    publishedInsights
+  ] = await Promise.all([
+    countEvents('page_view'),
+    countEvents('page_view', startOfToday()),
+    countEvents('page_view', startOfMonth()),
+    countEvents('project_view'),
+    countEvents('insight_view'),
+    countEvents('career_view'),
+    countEvents('career_apply_click'),
+    countRows('projects', { status: 'published' }),
+    countRows('careers', { status: 'published' }),
+    countRows('insights', { status: 'published' })
   ]);
-  if (projects.error || careers.error || insights.error) {
-    wrap.innerHTML = '<p class="admin-muted">Unable to load dashboard totals.</p>';
-    return;
-  }
-  const all = [...(projects.data || []), ...(careers.data || []), ...(insights.data || [])];
   const stats = [
-    ['Total projects', projects.data?.length || 0],
-    ['Published projects', (projects.data || []).filter(i => i.status === 'published').length],
-    ['Open careers', (careers.data || []).filter(i => i.status === 'published').length],
-    ['Published insights', (insights.data || []).filter(i => i.status === 'published').length],
-    ['Draft items', all.filter(i => i.status === 'draft').length]
+    ['Website Visits', websiteVisits],
+    ['Today Visits', todayVisits],
+    ['Month Visits', monthVisits],
+    ['Project Views', projectViews],
+    ['Insight Reads', insightReads],
+    ['Career Page Visits', careerVisits],
+    ['Apply Clicks', applyClicks],
+    ['Published Projects', publishedProjects],
+    ['Open Careers', openCareers],
+    ['Published Insights', publishedInsights]
   ];
   wrap.innerHTML = stats.map(([label, value]) => `<article class="admin-stat"><strong>${value}</strong><span>${label}</span></article>`).join('');
+  await loadActivityTables('[data-dashboard-tables]', startOfDaysAgo(30));
+}
+
+async function loadAnalytics(range = 'today') {
+  const since = range === 'today' ? startOfToday() : range === '7' ? startOfDaysAgo(7) : range === '30' ? startOfDaysAgo(30) : null;
+  await loadActivityTables('[data-analytics-tables]', since, 'analytics');
 }
 
 function bindAdminUi() {
@@ -232,6 +370,20 @@ function bindAdminUi() {
     $$('.admin-section').forEach(section => section.classList.remove('active'));
     button.classList.add('active');
     $(`#${button.dataset.adminTab}`)?.classList.add('active');
+    if (button.dataset.adminTab === 'analytics') {
+      history.replaceState(null, '', '/admin/analytics');
+      loadAnalytics($('[data-analytics-range] .active')?.dataset.range || 'today');
+    } else if (location.pathname.includes('/admin/analytics')) {
+      history.replaceState(null, '', '/admin');
+    }
+  }));
+
+  $('[data-category-filter]')?.addEventListener('change', () => loadList('projects'));
+
+  $$('[data-analytics-range] button').forEach(button => button.addEventListener('click', () => {
+    $$('[data-analytics-range] button').forEach(item => item.classList.remove('active'));
+    button.classList.add('active');
+    loadAnalytics(button.dataset.range);
   }));
 
   document.addEventListener('input', event => {
@@ -279,6 +431,9 @@ async function initAdmin() {
   $('[data-admin-user]').textContent = session.user.email;
   ['projects','careers','insights'].forEach(renderManager);
   bindAdminUi();
+  if (location.pathname.includes('/admin/analytics')) {
+    $('[data-admin-tab="analytics"]')?.click();
+  }
   loadStats();
   ['projects','careers','insights'].forEach(loadList);
 }

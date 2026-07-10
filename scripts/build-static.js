@@ -9,6 +9,7 @@ const files = [
   "about.html",
   "services.html",
   "projects.html",
+  "project.html",
   "insights.html",
   "careers.html",
   "contact.html",

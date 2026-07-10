@@ -32,6 +32,9 @@ if (video) {
 document.querySelectorAll('[data-mail-form]').forEach(form => {
   form.addEventListener('submit', event => {
     event.preventDefault();
+    if ((form.dataset.subject || '').toLowerCase().includes('career')) {
+      trackEvent('career_apply_click', { itemType: 'career', itemSlug: 'career-application-form' });
+    }
     const recipient = form.dataset.recipient || 'info@idharchitecture.com';
     const subject = form.dataset.subject || 'Website enquiry';
     const values = Array.from(new FormData(form).entries())
@@ -151,6 +154,7 @@ const publicSupabase = window.supabase?.createClient && publicSupabaseConfig.sup
   : null;
 
 const fallbackImage = 'architecture_placeholders_webp/04-hero-moody-interior-corner.webp';
+let pageViewTracked = false;
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
   '&': '&amp;',
   '<': '&lt;',
@@ -164,12 +168,35 @@ const paragraphs = value => String(value || '').split(/\n{2,}/).map(text => `<p>
 const skeleton = count => Array.from({ length: count }, () => '<article class="dynamic-skeleton"></article>').join('');
 const empty = text => `<p class="dynamic-empty">${text}</p>`;
 
+async function trackEvent(eventType, details = {}) {
+  if (!publicSupabase) return;
+  const payload = {
+    event_type: eventType,
+    page_path: location.pathname,
+    item_type: details.itemType || null,
+    item_id: details.itemId || null,
+    item_slug: details.itemSlug || null,
+    referrer: document.referrer || null,
+    user_agent: navigator.userAgent || null
+  };
+  publicSupabase.from('analytics_events').insert(payload).then(() => {}).catch(() => {});
+}
+
+function trackPageView() {
+  if (pageViewTracked) return;
+  pageViewTracked = true;
+  trackEvent('page_view');
+  if (location.pathname.includes('careers')) trackEvent('career_view');
+}
+
 function renderProject(project) {
-  return `<article class="project-card reveal">
+  const href = `projects/${encodeURIComponent(project.slug)}`;
+  return `<article class="project-card reveal" data-category="${escapeHtml(project.category || 'Others')}">
     <div><img src="${escapeHtml(project.cover_image_url || fallbackImage)}" alt="${escapeHtml(project.title)}" loading="lazy" /></div>
     <p>${escapeHtml(project.category || project.project_type || 'Project')} &middot; ${escapeHtml(project.location || '')}</p>
     <h3>${escapeHtml(project.title)}</h3>
     <small>${escapeHtml(project.short_description || '')}</small>
+    <a href="${href}">View project &rarr;</a>
   </article>`;
 }
 
@@ -180,7 +207,7 @@ function renderCareer(job) {
     <h3>${escapeHtml(job.job_title)}</h3>
     <p>${escapeHtml([job.location, job.work_mode].filter(Boolean).join(' &middot; '))}</p>
     <small>${escapeHtml(job.short_description || '')}</small>
-    <a href="mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(`Career Application: ${job.job_title}`)}">Apply &rarr;</a>
+    <a data-career-apply data-role="${escapeHtml(job.slug || job.job_title)}" href="mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(`Career Application: ${job.job_title}`)}">Apply &rarr;</a>
   </article>`;
 }
 
@@ -198,6 +225,25 @@ function renderInsight(post, compact = false) {
   </article>`;
 }
 
+function applyProjectFilter(value) {
+  document.querySelectorAll('[data-dynamic-projects] .project-card').forEach(card => {
+    const visible = !value || card.dataset.category === value;
+    card.hidden = !visible;
+  });
+}
+
+function setupProjectFilters() {
+  const filters = document.querySelector('[data-project-filters]');
+  if (!filters) return;
+  filters.addEventListener('click', event => {
+    const button = event.target.closest('[data-project-category]');
+    if (!button) return;
+    filters.querySelectorAll('[data-project-category]').forEach(item => item.classList.remove('active'));
+    button.classList.add('active');
+    applyProjectFilter(button.dataset.projectCategory || '');
+  });
+}
+
 async function hydratePublicData() {
   if (!publicSupabase) return;
 
@@ -209,6 +255,7 @@ async function hydratePublicData() {
     if (limit) query = query.limit(limit);
     const { data, error } = await query;
     grid.innerHTML = error ? empty('Unable to load projects right now.') : data?.length ? data.map(renderProject).join('') : empty('No items available at the moment.');
+    applyProjectFilter(document.querySelector('[data-project-category].active')?.dataset.projectCategory || '');
     grid.querySelectorAll('.reveal').forEach(observeReveal);
   }
 
@@ -243,10 +290,38 @@ async function hydrateInsightDetail() {
     return;
   }
   document.title = data.seo_title || `${data.title} - IDH Journal`;
+  trackEvent('insight_view', { itemType: 'insight', itemId: data.id, itemSlug: data.slug });
   if (cover && data.cover_image_url) cover.src = data.cover_image_url;
   detail.innerHTML = `<p class="eyebrow">${escapeHtml(data.content_type)}</p><h1>${escapeHtml(data.title)}</h1><p>${escapeHtml(data.excerpt || '')}</p>`;
   body.innerHTML = `${paragraphs(data.body_content || data.excerpt)}<p><a href="../insights.html">Back to insights &rarr;</a></p>`;
 }
 
+async function hydrateProjectDetail() {
+  const detail = document.querySelector('[data-project-detail]');
+  if (!detail || !publicSupabase) return;
+  const slug = decodeURIComponent(location.pathname.split('/').filter(Boolean).pop() || new URLSearchParams(location.search).get('slug') || '');
+  const body = document.querySelector('[data-project-body]');
+  const cover = document.querySelector('[data-project-cover]');
+  const { data, error } = await publicSupabase.from('projects').select('*').eq('slug', slug).eq('status', 'published').maybeSingle();
+  if (error || !data) {
+    detail.innerHTML = '<p class="eyebrow">Projects</p><h1>Project unavailable.</h1><p>No items available at the moment.</p>';
+    if (body) body.innerHTML = '';
+    return;
+  }
+  document.title = `${data.title} - IDH Projects`;
+  trackEvent('project_view', { itemType: 'project', itemId: data.id, itemSlug: data.slug });
+  if (cover && data.cover_image_url) cover.src = data.cover_image_url;
+  detail.innerHTML = `<p class="eyebrow">${escapeHtml(data.category || 'Project')}</p><h1>${escapeHtml(data.title)}</h1><p>${escapeHtml(data.short_description || '')}</p>`;
+  if (body) body.innerHTML = `<h2>${escapeHtml(data.location || '')}</h2>${paragraphs(data.full_description || data.short_description)}<p><a href="../projects.html">Back to projects &rarr;</a></p>`;
+}
+
+document.addEventListener('click', event => {
+  const careerApply = event.target.closest('[data-career-apply]');
+  if (careerApply) trackEvent('career_apply_click', { itemType: 'career', itemSlug: careerApply.dataset.role || null });
+});
+
+setupProjectFilters();
+trackPageView();
 hydratePublicData();
 hydrateInsightDetail();
+hydrateProjectDetail();

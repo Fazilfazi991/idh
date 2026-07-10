@@ -4,7 +4,7 @@ create table if not exists public.projects (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   slug text unique not null,
-  category text,
+  category text check (category in ('Residential Architecture', 'Residential Interior', 'Commercial Architecture', 'Commercial Interior', 'Landscape', 'Others')),
   location text,
   short_description text,
   full_description text,
@@ -64,6 +64,49 @@ create table if not exists public.admin_users (
   created_at timestamptz default now()
 );
 
+create table if not exists public.analytics_events (
+  id uuid primary key default gen_random_uuid(),
+  event_type text not null check (event_type in ('page_view', 'project_view', 'insight_view', 'career_view', 'career_apply_click')),
+  page_path text,
+  item_type text,
+  item_id uuid,
+  item_slug text,
+  referrer text,
+  user_agent text,
+  created_at timestamptz default now()
+);
+
+update public.projects
+set category = case category
+  when 'Residential' then 'Residential Architecture'
+  when 'Interiors' then 'Residential Interior'
+  when 'Commercial' then 'Commercial Interior'
+  when 'Hospitality' then 'Commercial Interior'
+  when 'Architecture' then 'Residential Architecture'
+  when 'Residential Architecture' then 'Residential Architecture'
+  when 'Residential Interior' then 'Residential Interior'
+  when 'Commercial Architecture' then 'Commercial Architecture'
+  when 'Commercial Interior' then 'Commercial Interior'
+  when 'Landscape' then 'Landscape'
+  when 'Others' then 'Others'
+  else 'Others'
+end
+where category is null
+   or category not in ('Residential Architecture', 'Residential Interior', 'Commercial Architecture', 'Commercial Interior', 'Landscape', 'Others');
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'projects_category_fixed_values'
+      and conrelid = 'public.projects'::regclass
+  ) then
+    alter table public.projects
+    add constraint projects_category_fixed_values
+    check (category in ('Residential Architecture', 'Residential Interior', 'Commercial Architecture', 'Commercial Interior', 'Landscape', 'Others'));
+  end if;
+end $$;
+
 alter table public.admin_users enable row level security;
 
 drop policy if exists "Admins read own admin record" on public.admin_users;
@@ -106,6 +149,7 @@ for each row execute function public.set_updated_at();
 alter table public.projects enable row level security;
 alter table public.careers enable row level security;
 alter table public.insights enable row level security;
+alter table public.analytics_events enable row level security;
 
 drop policy if exists "Published projects are public" on public.projects;
 create policy "Published projects are public" on public.projects
@@ -130,6 +174,15 @@ for select using (status = 'published');
 drop policy if exists "Admins manage insights" on public.insights;
 create policy "Admins manage insights" on public.insights
 for all using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "Public insert analytics events" on public.analytics_events;
+create policy "Public insert analytics events" on public.analytics_events
+for insert with check (true);
+
+drop policy if exists "Admins read analytics events" on public.analytics_events;
+create policy "Admins read analytics events" on public.analytics_events
+for select using (public.is_admin());
+
 
 insert into storage.buckets (id, name, public)
 values ('project-images', 'project-images', true)
