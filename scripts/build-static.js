@@ -49,6 +49,18 @@ const runtimeConfig = `window.IDH_SUPABASE_CONFIG = {
 fs.writeFileSync(path.join(root, "supabase-config.js"), runtimeConfig, "utf8");
 fs.writeFileSync(path.join(output, "supabase-config.js"), runtimeConfig, "utf8");
 
+const adminAliases = [
+  ["admin.html", path.join("admin", "index.html")],
+  ["admin.html", path.join("admin", "analytics.html")],
+  ["admin-login.html", path.join("admin", "login.html")]
+];
+
+for (const [source, alias] of adminAliases) {
+  const target = path.join(output, alias);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.copyFileSync(path.join(root, source), target);
+}
+
 for (const directory of directories) {
   fs.cpSync(path.join(root, directory), path.join(output, directory), {
     recursive: true

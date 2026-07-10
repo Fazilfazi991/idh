@@ -44,15 +44,16 @@ function requireClient() {
 async function protectAdmin() {
   if (!requireClient()) return null;
   const { data } = await supabaseClient.auth.getSession();
-  if (!data.session && !location.pathname.includes('admin-login')) {
-    location.href = 'admin-login.html';
+  const isLoginPage = location.pathname.includes('/admin/login') || location.pathname.includes('admin-login');
+  if (!data.session && !isLoginPage) {
+    location.href = '/admin/login';
     return null;
   }
-  if (data.session && !location.pathname.includes('admin-login')) {
+  if (data.session && !isLoginPage) {
     const { data: allowed } = await supabaseClient.rpc('is_admin');
     if (!allowed) {
       await supabaseClient.auth.signOut();
-      location.href = 'admin-login.html';
+      location.href = '/admin/login';
       return null;
     }
   }
@@ -76,7 +77,7 @@ async function handleLogin() {
       message.textContent = 'Unable to sign in. Check the email and password.';
       return;
     }
-    location.href = 'admin.html';
+    location.href = '/admin';
   });
 }
 
@@ -421,7 +422,7 @@ function bindAdminUi() {
 
   $('[data-admin-logout]')?.addEventListener('click', async () => {
     await supabaseClient.auth.signOut();
-    location.href = 'admin-login.html';
+    location.href = '/admin/login';
   });
 }
 
