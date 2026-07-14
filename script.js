@@ -201,7 +201,7 @@ function renderProject(project) {
 }
 
 function renderCareer(job) {
-  const email = job.application_email || 'careers@idharchitecture.com';
+  const email = job.application_email || 'hr@idharchitecture.com';
   return `<article class="job-card reveal">
     <span>${escapeHtml(job.employment_type || 'Role')}</span>
     <h3>${escapeHtml(job.job_title)}</h3>

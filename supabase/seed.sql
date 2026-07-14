@@ -21,9 +21,9 @@ sort_order = excluded.sort_order;
 
 insert into public.careers (job_title, slug, employment_type, location, work_mode, experience_level, short_description, responsibilities, requirements, application_email, status, sort_order)
 values
-('Junior Architect', 'junior-architect', 'Full-time', 'Manjeri, Kerala', 'On-site', '0-2 years', 'Assist with concept development, drawings, presentations and site coordination.', 'Concept development, drawings, presentations and site coordination.', 'Architecture qualification, drafting ability and strong design sensitivity.', 'careers@idharchitecture.com', 'published', 10),
-('Interior Design Intern', 'interior-design-intern', 'Internship', 'Manjeri, Kerala', 'On-site', 'Internship', 'Support mood boards, material research, furniture layouts and design documentation.', 'Mood boards, material research, furniture layouts and design documentation.', 'Interior design student or recent graduate with portfolio.', 'careers@idharchitecture.com', 'published', 20),
-('3D Visualizer', '3d-visualizer', 'Project', 'Hybrid', 'Hybrid', '2+ years', 'Create refined visual narratives for residential, commercial and hospitality projects.', '3D visualization, rendering and visual storytelling.', 'Strong visualization portfolio and experience with rendering workflows.', 'careers@idharchitecture.com', 'published', 30)
+('Junior Architect', 'junior-architect', 'Full-time', 'Manjeri, Kerala', 'On-site', '0-2 years', 'Assist with concept development, drawings, presentations and site coordination.', 'Concept development, drawings, presentations and site coordination.', 'Architecture qualification, drafting ability and strong design sensitivity.', 'hr@idharchitecture.com', 'published', 10),
+('Interior Design Intern', 'interior-design-intern', 'Internship', 'Manjeri, Kerala', 'On-site', 'Internship', 'Support mood boards, material research, furniture layouts and design documentation.', 'Mood boards, material research, furniture layouts and design documentation.', 'Interior design student or recent graduate with portfolio.', 'hr@idharchitecture.com', 'published', 20),
+('3D Visualizer', '3d-visualizer', 'Project', 'Hybrid', 'Hybrid', '2+ years', 'Create refined visual narratives for residential, commercial and hospitality projects.', '3D visualization, rendering and visual storytelling.', 'Strong visualization portfolio and experience with rendering workflows.', 'hr@idharchitecture.com', 'published', 30)
 on conflict (slug) do update set
 job_title = excluded.job_title,
 employment_type = excluded.employment_type,

@@ -149,7 +149,7 @@ async function saveItem(table, form) {
   const payload = {};
   fields[table].forEach(([name]) => payload[name] = formValue(form, name));
   payload.slug = payload.slug || slugify(payload[primaryField[table]]);
-  if (table === 'careers') payload.application_email = payload.application_email || 'careers@idharchitecture.com';
+  if (table === 'careers') payload.application_email = payload.application_email || 'hr@idharchitecture.com';
   await uploadFiles(table, form, payload);
   const id = form.elements.id.value;
   const query = id ? supabaseClient.from(table).update(payload).eq('id', id) : supabaseClient.from(table).insert(payload);

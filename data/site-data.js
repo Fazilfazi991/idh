@@ -1,7 +1,7 @@
 const contact = {
   email: "info@idharchitecture.com",
-  salesEmail: "sales@idharchitecture.com",
-  careersEmail: "careers@idharchitecture.com",
+  salesEmail: "idh@idharchitecture.com",
+  careersEmail: "hr@idharchitecture.com",
   phone: "+91 99170 70111",
   phoneHref: "+919917070111",
   address: "Maas Tower, Ground Floor, Manjeri, Malappuram, Kerala",

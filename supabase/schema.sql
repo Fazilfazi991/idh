@@ -31,7 +31,7 @@ create table if not exists public.careers (
   short_description text,
   responsibilities text,
   requirements text,
-  application_email text default 'careers@idharchitecture.com',
+  application_email text default 'hr@idharchitecture.com',
   status text default 'draft' check (status in ('draft', 'published', 'closed')),
   sort_order int default 0,
   created_at timestamptz default now(),
