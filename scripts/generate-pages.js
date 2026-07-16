@@ -254,7 +254,7 @@ function home() {
       <div class="hero-scrim"></div>
       <div class="hero-content reveal">
         <p class="eyebrow">Architecture <i></i> Interiors <i></i> Spatial Design</p>
-        <h1 id="hero-title">Designing Spaces<br />With Quiet Luxury<br /><em>&amp; Purpose</em></h1>
+        <h1 id="hero-title">Designing Spaces<br />With Quiet Luxury<br />&amp; <em>Purpose</em></h1>
         <p class="hero-copy">Integrated Design Habitat crafts refined residential, commercial and hospitality environments with timeless detail.</p>
         <div class="hero-actions"><a class="button button-gold" href="projects.html">View Projects</a><a class="button button-outline" href="contact.html">Start an Enquiry</a>${brochureButton}</div>
       </div>
@@ -265,9 +265,6 @@ function home() {
       <div class="about-scene reveal"><img src="architecture_placeholders_webp/05-about-studio-vignette.webp" alt="Atmospheric crafted interior by Integrated Design Habitat" loading="lazy" /><div class="about-panel"><div class="about-label"><p class="eyebrow">About the studio</p><i></i></div><h2>Design-Led.<br />Detail-Driven.<br />Purposeful Spaces.</h2><p>We create timeless environments shaped by intention, craft and a quiet commitment to quality.</p><p>Every project begins with its people and ends with a space that feels entirely their own.</p><a href="about.html">Learn more about us <span>&rsaquo;</span></a></div></div>
       <div class="about-metrics reveal"><div class="metric-card"><i class="metric-icon">&#9671;</i><strong>12+</strong><b></b><span>Years of experience</span></div><div class="metric-card"><i class="metric-icon">&#9635;</i><strong>250+</strong><b></b><span>Projects completed</span></div><div class="metric-card"><i class="metric-icon">&#9678;</i><strong>25+</strong><b></b><span>Cities worldwide</span></div></div>
     </section>
-    <section class="section journal" id="journal"><div class="section-heading reveal"><div><p class="eyebrow">Insights</p><h2>Journal</h2></div><a class="text-link" href="insights.html">View all articles &rarr;</a></div><div class="journal-grid" data-dynamic-insights data-limit="2">${insights.slice(0, 2).map((post) => `<article class="reveal"><img src="${post.image}" alt="${esc(post.title)}" loading="lazy" /><div><small>${post.date} &middot; ${post.category}</small><h3>${post.title}</h3><a href="insights.html">Read more &rarr;</a></div></article>`).join("")}</div></section>
-    <section class="section projects-section" id="projects"><div class="section-heading reveal"><div><p class="eyebrow">Featured projects</p><h2>Spaces Crafted With Intention</h2></div><a class="text-link" href="projects.html">View all projects &rarr;</a></div><div class="project-grid" data-dynamic-projects data-featured="true" data-limit="4">${projectCards(projects.slice(0, 4))}</div></section>
-    <section class="contact-cta" id="contact"><p class="eyebrow">Begin a conversation</p><h2>Let's Create Something Timeless</h2><p>Tell us about your project and the life you imagine within it.</p><div class="cta-actions"><a class="button button-gold" href="contact.html">Start an Enquiry</a>${brochureButton}</div></section>
   </main>`);
 }
 
