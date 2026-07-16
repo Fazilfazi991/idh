@@ -254,7 +254,7 @@ function home() {
       <div class="hero-scrim"></div>
       <div class="hero-content reveal">
         <p class="eyebrow">Architecture <i></i> Interiors <i></i> Spatial Design</p>
-        <h1 id="hero-title">Designing Spaces<br />With Quiet Luxury<br />&amp; <em>Purpose</em></h1>
+        <h1 id="hero-title">Designing Spaces<br />With Quiet Luxury<br />&amp; Purpose</h1>
         <p class="hero-copy">Integrated Design Habitat crafts refined residential, commercial and hospitality environments with timeless detail.</p>
         <div class="hero-actions"><a class="button button-gold" href="projects.html">View Projects</a><a class="button button-outline" href="contact.html">Start an Enquiry</a>${brochureButton}</div>
       </div>
@@ -313,7 +313,6 @@ function servicesPage() {
   <main>
     ${pageHero("Services", "Design Services for Thoughtful Spaces", "Architecture, interiors and spatial design shaped with clarity, craft and purpose.", "services_section_images_webp/01-architecture-design-curved-staircase.webp")}
     <section class="content-section services-journey" id="design-services"><div class="section-heading reveal"><div><p class="eyebrow">Our Disciplines</p><h2>Design Services</h2></div>${brochureButton}</div><div class="detail-grid">${services.map((service) => `<article class="detail-card reveal" id="${serviceAnchor(service.title)}"><img src="${service.image}" alt="${esc(service.title)}" loading="lazy" /><span>${service.number}</span><h3>${service.title}</h3><p>${service.detail}</p><a href="contact.html">Discuss this service &rarr;</a></article>`).join("")}</div></section>
-    <section class="content-section services-process" id="process"><div class="section-heading reveal"><div><p class="eyebrow">How We Work</p><h2>Our Process</h2></div><p class="section-note">A clear, collaborative path from first conversation to considered realisation.</p></div><div class="timeline-grid">${process.map(([num, title, text]) => `<article class="reveal"><span>${num}</span><h3>${title}</h3><p>${text}</p></article>`).join("")}</div></section>
     <section class="contact-cta"><p class="eyebrow">Begin a conversation</p><h2>Ready to begin your project?</h2><p>Share your vision with us and we'll guide you through the next steps.</p><div class="cta-actions"><a class="button button-gold" href="contact.html">Start an Enquiry</a>${brochureButton}</div></section>
   </main>`);
 }

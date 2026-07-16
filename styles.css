@@ -281,21 +281,12 @@
 
 /* Services journey */
 .services-journey{padding-bottom:72px}
-.services-process{padding-top:72px}
-.services-process .section-heading{align-items:end}
 .section-note{max-width:460px;margin:0;color:#bdb6ad;text-align:right}
-.services-process .timeline-grid{margin-top:48px}
-.services-process .timeline-grid article{min-height:260px;border-color:rgba(176,141,87,.72);background:linear-gradient(180deg,rgba(176,141,87,.05),rgba(255,255,255,.012))}
-.services-process .timeline-grid h3{margin-top:42px}
-.services-process .timeline-grid p{color:#aaa59d}
 @media(max-width:900px){
-  .services-process .section-heading{align-items:start}
   .section-note{text-align:left}
 }
 @media(max-width:640px){
   .services-journey{padding-bottom:54px}
-  .services-process{padding-top:54px}
-  .services-process .timeline-grid article{min-height:0;padding-bottom:24px}
 }
 
 /* Site-wide heading typography */
@@ -332,6 +323,6 @@ h1,h2,h3,
 
 /* Homepage hero heading consistency */
 .hero h1{font-family:var(--heading-font);font-weight:400;letter-spacing:0;line-height:.96}
-.hero h1 em{font-style:italic}
+.hero h1 em{font-style:normal}
 @media(max-width:900px){.hero h1{max-width:100%;line-height:1}}
 @media(max-width:600px){.hero h1{font-size:clamp(42px,12vw,54px);line-height:1.03}}
