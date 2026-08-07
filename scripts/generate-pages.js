@@ -269,15 +269,6 @@ function home() {
 }
 
 function about() {
-  const studioNotes = [
-    ["Founder Message", "&ldquo;Quiet design has the power to change how we live.&rdquo;", "Every IDH project begins with listening. We look for the subtle details that make a space feel calm, personal and enduring, then shape them into architecture and interiors with purpose."],
-    ["Co-founder Message", "&ldquo;The strongest spaces are built from clarity.&rdquo;", "Our role is to make the design journey precise and reassuring, bringing together creative direction, practical decisions and careful execution so each project moves with confidence."]
-  ];
-  const aboutTeam = [
-    ["Founder", "Principal Designer", "assets/team-founder.png", "Guides the studio's creative direction with a focus on proportion, atmosphere and spaces that feel deeply personal."],
-    ["Co-founder", "Design Director", "assets/team-cofounder.png", "Leads design coordination and project clarity, bringing structure, detail and calm decision-making into every stage."],
-    ["Studio Team", "Architecture & Interiors", "assets/team-studio.png", "A collaborative team shaping refined residential, commercial and hospitality spaces."]
-  ];
   return layout("about", "about", `
   <main>
     <section class="about-hero page-hero">
@@ -293,17 +284,24 @@ function about() {
       <div><p class="eyebrow">Our Journey</p><h2>From thoughtful beginnings to enduring spatial identities.</h2></div>
       <p>IDH began with a simple belief: spaces should feel intentional, personal and quietly elevated. Our journey continues through residences, commercial interiors and hospitality environments that balance beauty with use.</p>
     </section>
-    <section class="about-editorial about-duo">
-      <article class="reveal"><p class="eyebrow">Vision</p><h2>To shape timeless habitats that enrich daily life.</h2><p>Our vision is to create architecture and interiors that remain relevant beyond trends, rooted in context, proportion and emotional clarity.</p></article>
-      <article class="reveal"><p class="eyebrow">Mission</p><h2>To bring clarity, craft and care into every stage.</h2><p>We guide clients from first idea to final realisation through considered design, transparent communication and refined detailing.</p></article>
+    <section class="about-editorial about-founders" aria-labelledby="founders-title">
+      <div class="about-section-kicker reveal"><p class="eyebrow">Founders</p><h2 id="founders-title">Built on shared thinking.</h2></div>
+      <article class="founder-statement reveal">
+        <figure><img src="assets/ar-rashid-founder.png" alt="AR Rashid, Founder and Principal Architect at Integrated Design Habitat" loading="lazy" /></figure>
+        <div class="founder-copy"><p class="eyebrow">Founder</p><h3>AR Rashid</h3><p class="founder-title">Founder / Principal Architect</p><blockquote><p>&ldquo;Alone we can do so little; together we can do so much.&rdquo;</p><cite>&mdash; Helen Keller</cite></blockquote><p>Great architecture is built on collaboration, trust, and shared purpose. At Integrated Design Habitat (IDH), we believe every project is a partnership&mdash;where ideas, expertise, and vision come together to create places that truly matter.</p><p class="founder-signoff">Together, we design with purpose and build with passion.</p><p class="founder-role">Integrated Design Habitat (IDH)</p></div>
+      </article>
+      <article class="founder-statement founder-statement-reverse reveal">
+        <figure><img src="assets/muhammed-salih-cofounder.png" alt="Muhammed Salih TP, Co-Founder and Design Director at Integrated Design Habitat" loading="lazy" /></figure>
+        <div class="founder-copy"><p class="eyebrow">Co-Founder</p><h3>Muhammed Salih TP</h3><p class="founder-title">Co-Founder / Design Director</p><blockquote><p>&ldquo;We shape our buildings; thereafter they shape us.&rdquo;</p><cite>&mdash; Winston Churchill</cite></blockquote><p>At Integrated Design Habitat (IDH), we believe architecture is more than building structures&mdash;it&rsquo;s about creating places that inspire, endure, and enrich everyday life.</p><p class="founder-signoff">Design with Purpose. Build with Integrity. Leave a Legacy.</p><p class="founder-role">Integrated Design Habitat (IDH)</p></div>
+      </article>
     </section>
-    <section class="about-editorial about-notes">
-      <div class="about-section-kicker reveal"><p class="eyebrow">Studio Notes</p><h2>From the Studio</h2></div>
-      <div class="about-note-grid">${studioNotes.map(([label, quote, copy]) => `<article class="reveal"><span>${label}</span><h3>${quote}</h3><p>${copy}</p></article>`).join("")}</div>
+    <section class="about-editorial about-principles" aria-label="Mission and vision">
+      <article class="reveal"><p class="eyebrow">01 &mdash; Mission</p><h2>Our Mission</h2><p>We believe the greatest architecture is never noticed first&mdash;it is felt. Our mission is to design spaces that quietly elevate everyday life through beauty, purpose, emotion, and an unwavering respect for the world around us.</p></article>
+      <article class="reveal"><p class="eyebrow">02 &mdash; Vision</p><h2>Our Vision</h2><p>Our vision is to create architecture that quietly improves everyday life&mdash;spaces that inspire without demanding attention, belong to their surroundings, and remain meaningful for generations.</p></article>
     </section>
-    <section class="about-editorial about-team">
-      <div class="about-section-kicker reveal"><p class="eyebrow">Team</p><h2>The People Behind IDH</h2></div>
-      <div class="about-team-grid">${aboutTeam.map(([name, role, image, note]) => `<article class="reveal"><img src="${image}" alt="${esc(name)}" loading="lazy" /><h3>${name}</h3><span>${role}</span><p>${note}</p></article>`).join("")}</div>
+    <section class="about-closing reveal">
+      <img src="architecture_placeholders_webp/03-hero-curved-staircase.webp" alt="A sculptural interior by IDH" loading="lazy" />
+      <div><p class="eyebrow">Integrated Design Habitat</p><h2>Spaces shaped with clarity, care and lasting intention.</h2><a class="button button-gold" href="projects.html">Explore Our Work</a></div>
     </section>
   </main>`);
 }
