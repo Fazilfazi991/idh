@@ -17,7 +17,6 @@ const contact = {
 const nav = [
   ["Home", "index.html"],
   ["About", "about.html"],
-  ["Services", "services.html"],
   ["Projects", "projects.html"],
   ["Insights", "insights.html"],
   ["Careers", "careers.html"],

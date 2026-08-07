@@ -77,7 +77,6 @@ function header(active) {
 function footer() {
   const footerNav = [
     ["Studio", "about.html", "&#9633;"],
-    ["Services", "services.html", "&#9651;"],
     ["Projects", "projects.html", "&#9637;"],
     ["Contact", "contact.html", "&#9675;"]
   ];
