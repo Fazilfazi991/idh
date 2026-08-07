@@ -295,8 +295,8 @@ function about() {
       </article>
     </section>
     <section class="about-editorial about-principles" aria-label="Mission and vision">
-      <article class="reveal"><p class="eyebrow">01 &mdash; Mission</p><h2>Our Mission</h2><p>We believe the greatest architecture is never noticed first&mdash;it is felt. Our mission is to design spaces that quietly elevate everyday life through beauty, purpose, emotion, and an unwavering respect for the world around us.</p></article>
-      <article class="reveal"><p class="eyebrow">02 &mdash; Vision</p><h2>Our Vision</h2><p>Our vision is to create architecture that quietly improves everyday life&mdash;spaces that inspire without demanding attention, belong to their surroundings, and remain meaningful for generations.</p></article>
+      <article class="reveal"><h2>Our Mission</h2><p>We believe the greatest architecture is never noticed first&mdash;it is felt. Our mission is to design spaces that quietly elevate everyday life through beauty, purpose, emotion, and an unwavering respect for the world around us.</p></article>
+      <article class="reveal"><h2>Our Vision</h2><p>Our vision is to create architecture that quietly improves everyday life&mdash;spaces that inspire without demanding attention, belong to their surroundings, and remain meaningful for generations.</p></article>
     </section>
     <section class="about-closing reveal">
       <img src="architecture_placeholders_webp/03-hero-curved-staircase.webp" alt="A sculptural interior by IDH" loading="lazy" />
