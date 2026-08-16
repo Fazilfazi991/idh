@@ -26,5 +26,9 @@
 .admin-item h3{font-size:22px;margin:0 0 6px}.admin-item p{font-size:12px;color:#aaa59d;margin:0}.admin-item-actions{display:flex;gap:8px;align-items:start}
 .icon-action{width:34px;height:34px;border:1px solid rgba(180,138,73,.46);background:transparent;color:var(--gold);cursor:pointer}
 .admin-badge{display:inline-flex;padding:4px 8px;border:1px solid rgba(180,138,73,.35);color:var(--gold);font-size:9px;text-transform:uppercase;letter-spacing:.12em;margin-right:6px}
+
+/* Keep the admin heading scale aligned with the public site. */
+.admin-auth-panel h1,.admin-topbar h1{font-size:clamp(27.2px,3.2vw,43.2px)}
+.manager-head h2{font-size:33.6px}.admin-table-card h3{font-size:19.2px}.admin-item h3{font-size:17.6px}
 @media(max-width:1050px){.admin-page{grid-template-columns:1fr}.admin-sidebar{position:static;height:auto}.admin-sidebar nav{grid-template-columns:repeat(5,1fr)}.admin-logout{margin-top:18px}.manager-grid{grid-template-columns:1fr}.admin-stats{grid-template-columns:repeat(2,1fr)}.admin-dashboard-tables{grid-template-columns:1fr}}
 @media(max-width:640px){.admin-main{padding:24px 20px 54px}.admin-sidebar nav,.form-row,.admin-stats{grid-template-columns:1fr}.admin-topbar,.manager-head{display:block}.admin-auth-panel{padding:26px}}

@@ -323,3 +323,26 @@ h1,h2,h3,
 .hero h1 em{font-style:normal}
 @media(max-width:900px){.hero h1{max-width:100%;line-height:1}}
 @media(max-width:600px){.hero h1{font-size:clamp(42px,12vw,54px);line-height:1.03}}
+
+/* Heading scale: 20% smaller across the public site. */
+.hero h1{font-size:clamp(46.4px,5.04vw,81.6px)}
+.intro-copy h2,.section-heading h2{font-size:clamp(30.4px,3.2vw,51.2px)}
+.service h3,.journal-grid h3{font-size:20.8px}.project-card h3{font-size:20px}
+.contact-cta h2{font-size:clamp(33.6px,4vw,57.6px)}
+.services-heading h2{font-size:clamp(40px,4.32vw,64px)}
+.service-overlay h3{font-size:clamp(32px,3.2vw,48px)}.service-tile h3{font-size:19.2px}.consultation h3{font-size:22.4px}
+.clients-intro h2{font-size:clamp(33.6px,3.2vw,49.6px)}.about-panel h2{font-size:clamp(35.2px,3.36vw,52.8px)}
+.process-heading h2{font-size:clamp(38.4px,3.76vw,57.6px)}.process-card h3{font-size:30.4px}.process-discover h3{font-size:41.6px}
+.process-compact h3,.process-develop h3,.process-deliver h3{font-size:24.8px}
+.page-hero h1{font-size:clamp(30.4px,3.2vw,48px)}.content-section h2{font-size:clamp(33.6px,3.52vw,60.8px)}
+.team-card h3,.values-grid h3,.detail-card h3,.job-card h3,.insight-card h3,.timeline-grid h3,.process-list h3{font-size:24.8px}
+.services-showcase .services-mosaic .lux-card h3{font-size:clamp(22.4px,1.76vw,28.8px)}
+.about-journey h2,.about-section-kicker h2{font-size:clamp(28.8px,3.2vw,49.6px)}.about-duo h2{font-size:clamp(23.2px,2.16vw,34.4px)}
+.about-note-grid h3{font-size:clamp(22.4px,2vw,32px)}.about-team-grid h3{font-size:25.6px}.founder-copy h3{font-size:clamp(27.2px,2.56vw,40px)}
+.about-principles h2{font-size:clamp(26.4px,2.64vw,40px)}.about-closing h2{font-size:clamp(31.2px,3.52vw,53.6px)}
+@media(max-width:900px){.hero h1{font-size:clamp(38.4px,10.4vw,60.8px)}.page-hero h1{font-size:clamp(28.8px,4vw,38.4px)}}
+@media(max-width:640px){.page-hero h1{font-size:clamp(25.6px,7.2vw,30.4px)}.content-section h2{font-size:31.2px}.about-journey h2,.about-section-kicker h2,.about-closing h2{font-size:30.4px}.founder-copy blockquote p{font-size:clamp(23.2px,6.72vw,28.8px)}}
+@media(max-width:600px){.hero h1{font-size:clamp(33.6px,9.6vw,43.2px)}.section-heading h2,.intro-copy h2{font-size:31.2px}}
+@media(max-width:580px){.about-panel h2{font-size:34.4px}}
+@media(max-width:560px){.clients-intro h2{font-size:31.2px}}
+@media(max-width:520px){.services-heading h2{font-size:40.8px}}
