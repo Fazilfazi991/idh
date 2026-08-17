@@ -277,6 +277,72 @@ async function hydratePublicData() {
   }
 }
 
+function setAboutText(node, selector, value, prefix = '') {
+  const target = node.querySelector(selector);
+  if (!target || !value) return;
+  target.textContent = `${prefix}${value}`;
+}
+
+function renderAboutPerson(node, person) {
+  const image = node.querySelector('[data-about-image]');
+  if (image) {
+    if (person.image_url) {
+      image.src = person.image_url;
+      image.alt = `${person.name}, ${person.designation}`;
+      image.hidden = false;
+    } else {
+      image.hidden = true;
+    }
+  }
+  setAboutText(node, '[data-about-name]', person.name);
+  setAboutText(node, '[data-about-designation]', person.designation);
+  setAboutText(node, '[data-about-quote]', person.quote, '“');
+  const quote = node.querySelector('[data-about-quote]');
+  if (quote && person.quote) quote.textContent = `“${person.quote}”`;
+  setAboutText(node, '[data-about-quote-author]', person.quote_author, '— ');
+  setAboutText(node, '[data-about-message]', person.message);
+  setAboutText(node, '[data-about-closing]', person.closing_statement);
+}
+
+function renderAboutTeam(people) {
+  const grid = document.querySelector('[data-about-team]');
+  if (!grid) return;
+  const section = grid.closest('.about-team');
+  if (!people.length) {
+    if (section) section.hidden = true;
+    return;
+  }
+  grid.innerHTML = people.map(person => `<article class="reveal visible"><figure>${person.image_url ? `<img src="${escapeHtml(person.image_url)}" alt="${escapeHtml(`${person.name}, ${person.designation}`)}" loading="lazy" />` : ''}</figure><h3>${escapeHtml(person.name)}</h3><p>${escapeHtml(person.designation)}</p></article>`).join('');
+}
+
+async function hydrateAboutPage() {
+  if (!publicSupabase || !document.querySelector('[data-about-person], [data-about-team]')) return;
+  const [{ data: people, error: peopleError }, { data: content, error: contentError }] = await Promise.all([
+    publicSupabase.from('about_people').select('*').eq('is_active', true).order('display_order'),
+    publicSupabase.from('about_content').select('*')
+  ]);
+  if (!peopleError) {
+    ['founder', 'co_founder'].forEach(type => {
+      const node = document.querySelector(`[data-about-person="${type}"]`);
+      const person = (people || []).find(item => item.person_type === type);
+      if (!node) return;
+      if (!person) node.hidden = true;
+      else renderAboutPerson(node, person);
+    });
+    renderAboutTeam((people || []).filter(item => item.person_type === 'team'));
+  }
+  if (!contentError) {
+    (content || []).forEach(item => {
+      const node = document.querySelector(`[data-about-content="${item.content_key}"]`);
+      if (!node) return;
+      const heading = node.querySelector('h2');
+      const body = node.querySelector('p');
+      if (heading && item.heading) heading.textContent = item.heading;
+      if (body && item.body) body.textContent = item.body;
+    });
+  }
+}
+
 async function hydrateInsightDetail() {
   const detail = document.querySelector('[data-insight-detail]');
   if (!detail || !publicSupabase) return;
@@ -323,5 +389,6 @@ document.addEventListener('click', event => {
 setupProjectFilters();
 trackPageView();
 hydratePublicData();
+hydrateAboutPage();
 hydrateInsightDetail();
 hydrateProjectDetail();

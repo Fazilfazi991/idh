@@ -28,6 +28,7 @@ const directories = [
   "assets",
   "data",
   "architecture_placeholders_webp",
+  "idh_transparent_cutouts_only",
   "services_section_images_webp",
   path.join("public", "videos", "optimized")
 ];
